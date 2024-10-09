@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Take Quiz</h1>
+        <form id="quizForm">
+            <label for="studentName">Name:</label>
+            <input type="text" id="studentName" required>
+            <label for="studentRoll">Roll Number:</label>
+            <input type="text" id="studentRoll" required>
+            <div id="quizQuestions"></div>
+            <button type="button" onclick="submitQuiz()">Submit Quiz</button>
+        </form>
+    </div>
+
+    <script src="quiz.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const quizData = JSON.parse(localStorage.getItem('quizData'));
+            const quizQuestionsDiv = document.getElementById('quizQuestions');
+        
+            if (quizData) {
+                quizData.forEach((q, index) => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.innerHTML = `
+                        <strong>Question ${index + 1}:</strong> ${q.question}<br>
+                        <label><input type="radio" name="answer${index}" value="A"> ${q.options[0]}</label><br>
+                        <label><input type="radio" name="answer${index}" value="B"> ${q.options[1]}</label><br>
+                        <input type="hidden" id="trueAnswer${index}" value="${q.trueOption}">
+                        <hr>
+                    `;
+                    quizQuestionsDiv.appendChild(questionDiv);
+                });
+            }
+        });
+        
+        function submitQuiz() {
+            const quizData = JSON.parse(localStorage.getItem('quizData'));
+            let totalScore = 0;
+        
+            quizData.forEach((q, index) => {
+                const selectedAnswer = document.querySelector(`input[name="answer${index}"]:checked`);
+                const trueAnswer = document.getElementById(`trueAnswer${index}`).value;
+        
+                if (selectedAnswer && selectedAnswer.value === trueAnswer) {
+                    totalScore++;
+                }
+            });
+        
+            const studentName = document.getElementById('studentName').value;
+            const studentRoll = document.getElementById('studentRoll').value;
+        
+            const result = {
+                name: studentName,
+                rollNumber: studentRoll,
+                score: totalScore
+            };
+        
+            localStorage.setItem('quizResult', JSON.stringify(result));
+            alert(`Quiz submitted! Score: ${totalScore}/${quizData.length}`);
+        }
+        
+    </script>
+</body>
+</html> 
+

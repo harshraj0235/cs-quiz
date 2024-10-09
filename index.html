@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Maker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="intro-section">
+        <div class="intro-content">
+            <h1>Create an awesome quiz in minutes</h1>
+            <p>Quiz Maker is the easiest way to make quizzes</p>
+            <!-- <button class="generate-quiz-button">Generate Quiz Automatically (AI)</button> -->
+            <input id="questionInput" type="text" placeholder="Search any topic...">
+<button class="generate-quiz-button" onclick="getAnswer()">View Details</button>
+<div id="answer"></div>
+
+        </div>
+    </div>
+    <div class="quiz-container">
+        
+        <div class="options">
+            <!-- <button class="generate-button">Generate Quiz Automatically (AI)</button> -->
+            <!-- <button id="generate-button" class="generate-button">Generate Quiz Automatically (AI)</button> -->
+            <button id="generate-button" class="generate-button">Generate Quiz Automatically (AI)</button>
+
+
+            <div class="navigation-links">
+                <a id="quiz-link" href="#">Quiz</a>
+                <!-- <a id="themes-link" href="#">Themes</a> -->
+                <a id="themes-link" href="#">Categories</a>
+                <a href="play.html">Play Quiz</a>
+                <a href="#">Results</a>
+                <a href="#">Leads</a>
+                <a href="#">Share</a>
+            </div>
+            
+            
+        </div>
+        <div class="quiz-editor">
+            <input type="text" placeholder="Type your Quiz Title">
+            <select>
+                <option value="multiple-choice">Multiple Choice</option>
+                <option value="true-false">True/False</option>
+                <!-- Add more quiz type options -->
+            </select>
+            <button class="add-question-button">Add Question</button>
+        </div>
+        <div class="quiz-actions">
+            <!-- <button class="new-quiz-button">New Quiz</button> -->
+            <button class="new-quiz-button">New Quiz</button>
+
+            <button class="preview-button">Preview</button>
+            <button class="save-button">Save Quiz</button>
+        </div>
+        <div class="ai-helper">
+            <!-- <h2>Make Quiz Now</h2> -->
+            <h2><a href="new.html">Make Quiz Now</a></h2>
+
+            <p>- By AI</p>
+        </div>
+    </div>
+    <div class="container">
+        <h1>How to Make a Quiz</h1>
+        <div class="section">
+            <h2>Choose your quiz type</h2>
+            <p>Built for both students, lead capture, and leisure, you can make your own trivia quiz, personality tests, polls, and surveys. Assign grades, certificates and more.</p>
+            <div class="image">
+                <!-- Add an image related to quiz type -->
+            </div>
+        </div>
+        <div class="section">
+            <h2>Write your questions</h2>
+            <p>Add your question from more than 40 types, tick the correct answer and repeat. Hit the Themes tab to change the look and feel of your quiz.</p>
+            <div class="image">
+                <!-- Add an image related to writing questions -->
+            </div>
+        </div>
+        <div class="section">
+            <h2>Share with your network</h2>
+            <p>Send out your quiz via a direct link, embed on your website, or share on social and start getting responses right away.</p>
+            <div class="image">
+                <!-- Add an image related to sharing quizzes -->
+            </div>
+        </div>
+        <div class="statistics">
+            <p><strong>107 Million+ People Quizzed</strong></p>
+            <p><strong>Trusted by the biggest sites</strong></p>
+        </div>
+    </div>
+    
+
+        <script>
+            // Get a reference to the quiz link
+            const quizLink = document.getElementById('quiz-link');
+        
+            // Add a click event listener to the quiz link
+            quizLink.addEventListener('click', function(event) {
+                // Prevent the default behavior of the link (e.g., navigating to #)
+                event.preventDefault();
+        
+                // Navigate to the desired URL (quiz.html)
+                window.location.href = 'quiz.html';
+            });
+
+
+
+            document.addEventListener('DOMContentLoaded', function() {
+                const themesLink = document.getElementById('themes-link');
+            
+                themesLink.addEventListener('click', function(event) {
+                  event.preventDefault();
+            
+                  // Update the current page's URL to the specified URL
+                  window.location.href = 'https://quiz-app-incoderweb.vercel.app/';
+                });
+              });
+            
+    
+
+    function getAnswer() {
+        const questionInput = document.getElementById('questionInput').value;
+        if (!questionInput) {
+            alert('Please enter a question.');
+            return;
+        }
+    
+        // Make a request to DuckDuckGo Instant Answer API
+        fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(questionInput)}&format=json`)
+            .then(response => response.json())
+            .then(data => {
+                const answerElement = document.getElementById('answer');
+                if (data.AbstractText) {
+                    answerElement.textContent = data.AbstractText;
+                } else {
+                    answerElement.textContent = 'No answer found.';
+                }
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }
+    
+
+// Wait for the DOM content to fully load
+document.addEventListener('DOMContentLoaded', () => {
+    const generateButton = document.getElementById('generate-button');
+
+    generateButton.addEventListener('click', () => {
+        // Open the specified URL in the same tab
+        window.location.href = 'https://fazevennom-quiz-app.vercel.app/';
+    });
+});
+
+
+        </script>
+        
+    
+
+    <script src="script.js"></script>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>FAQs - Quiz Maker</title>
+        <style>
+            body{
+                background-color: black;
+            }
+            /* Styling for the FAQ section */
+            .faq-container {
+                max-width: 600px; /* Adjust as needed */
+                margin: 0 auto; /* Center align horizontally */
+                padding: 20px;
+                text-align: left; /* Align text to the left within container */
+            }
+            .faq-item {
+                margin-bottom: 20px;
+                cursor: pointer;
+            }
+            .answer {
+                display: none;
+                margin-top: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="faq-container">
+            <h1>Frequently Asked Questions</h1>
+    
+            <div class="faq-item">
+                <h2 onclick="toggleAnswer('answer1')">Is Quiz Maker free?</h2>
+                <p id="answer1" class="answer">Yes, Quiz Maker offers a free plan with basic features. Advanced features may require a premium subscription.</p>
+            </div>
+    
+            <div class="faq-item">
+                <h2 onclick="toggleAnswer('answer2')">Do I need to signup to make my own quiz?</h2>
+                <p id="answer2" class="answer">Yes, you need to sign up for an account to create and manage quizzes on Quiz Maker.</p>
+            </div>
+    
+            <div class="faq-item">
+                <h2 onclick="toggleAnswer('answer3')">How do I see who has completed my quiz?</h2>
+                <p id="answer3" class="answer">You can view quiz completion statistics and individual responses in your Quiz Maker dashboard after participants have submitted their quizzes.</p>
+            </div>
+    
+            <div class="faq-item">
+                <h2 onclick="toggleAnswer('answer4')">How to make online courses?</h2>
+                <p id="answer4" class="answer">To create online courses, you can use e-learning platforms that support course creation. Quiz Maker may integrate with certain platforms or offer course creation features directly.</p>
+            </div>
+    
+            <div class="faq-item">
+                <h2 onclick="toggleAnswer('answer5')">How do I access my results and existing quizzes?</h2>
+                <p id="answer5" class="answer">Log in to your Quiz Maker account and navigate to the dashboard. There, you'll find all your quizzes along with detailed results and analytics.</p>
+            </div>
+    
+            <div class="faq-item">
+                <h2 onclick="toggleAnswer('answer6')">Where do I create my quiz?</h2>
+                <p id="answer6" class="answer">You can create quizzes directly on the Quiz Maker website after signing in to your account. Use the quiz creation tools provided in your dashboard.</p>
+            </div>
+        </div>
+    
+        <script>
+            // JavaScript function to toggle answer visibility
+            function toggleAnswer(answerId) {
+                var answer = document.getElementById(answerId);
+                if (answer.style.display === 'none') {
+                    answer.style.display = 'block';
+                } else {
+                    answer.style.display = 'none';
+                }
+            }
+            document.addEventListener('DOMContentLoaded', function() {
+                // Find the button element
+                const button = document.querySelector('.new-quiz-button');
+            
+                // Add a click event listener to the button
+                button.addEventListener('click', function() {
+                  // Redirect to new.html when the button is clicked
+                  window.location.href = 'new.html';
+                });
+              });
+            
+        </script>
+    </body>
+    
+    
+</body>
+</html>

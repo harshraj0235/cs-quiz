@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coding & Computer Science Quiz</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            padding: 20px;
+        }
+        
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        
+        .topic {
+            display: inline-block;
+            padding: 15px 25px;
+            margin: 10px;
+            background-color: #ff69b4; /* Pink color */
+            color: #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle box shadow */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .topic:hover {
+            transform: translateY(-2px); /* Lift the topic on hover */
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* Enhance box shadow on hover */
+        }
+        
+        #quiz {
+            margin-top: 20px;
+        }
+        
+        .question {
+            margin-bottom: 10px;
+            color: #333;
+            display: inline-block;
+            font-size: 20px;
+            
+            text-align: center;
+            width: 740px;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+            border: 2px solid #ff69b4;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            
+        }
+        
+        .options {
+            margin-bottom: 20px;
+            text-align: left;
+            margin-left: 20px;
+            margin-right: 20px;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-size: 20px;
+            
+            color: #333;
+            width: 740px;
+            border: 2px solid #ff69b4;
+            display: inline-block;
+            margin-bottom: 20px;
+            margin-left: 20px;
+
+        }
+        
+        .option {
+            display: inline-block;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+            border: 2px solid #ff69b4;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-size: 20px;
+            
+            color: #333;
+            width: 740px;
+            margin-left: 20px;
+
+
+
+        }
+        
+        .option.correct {
+            background-color: #00ff00; /* Green color for correct answers */
+            color: #fff; 
+            border: 2px solid #00ff00;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            
+        
+
+        
+        }
+        
+        .option:hover {
+            background-color: #ff69b4; /* Pink color on hover */
+            color: #fff; /* White text on hover */
+            display: inline-block;
+            border: 2px solid #ff69b4;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+
+        }
+        
+        #submit-btn {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        
+        #submit-btn:hover {
+            background-color: #0056b3;
+        }
+        
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+        }
+        
+        
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Select a Topic</h1>
+        <div class="topic" data-topic="html-css-js">HTML/CSS/JS</div>
+        <div class="topic" data-topic="python">Python</div>
+        <div class="topic" data-topic="algorithms">Algorithms</div>
+        <div class="topic" data-topic="artificial-intelligence">Artificial Intelligence</div>
+<div class="topic" data-topic="data-structures-algorithms">Data Structures and Algorithms</div>
+<div class="topic" data-topic="cybersecurity-cryptography">Cybersecurity and Cryptography</div>
+<div class="topic" data-topic="cloud-computing">Cloud Computing</div>
+<div class="topic" data-topic="internet-of-things">Internet of Things (IoT)</div>
+<div class="topic" data-topic="big-data-analytics">Big Data and Data Analytics</div>
+<div class="topic" data-topic="software-engineering-development">Software Engineering and Development</div>
+<div class="topic" data-topic="computer-vision">Computer Vision</div>
+<div class="topic" data-topic="natural-language-processing">Natural Language Processing</div>
+<div class="topic" data-topic="computer-graphics-visualization">Computer Graphics and Visualization</div>
+
+        <!-- Add more topics as needed -->
+
+        <div id="quiz"></div>
+        <button id="submit-btn">Submit Quiz</button>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        const topics = {
+            
+    'html-css-js': [
+    { 
+        question: 'What does CSS stand for?',
+        options: ['Cascading Style Sheets', 'Creative Style Sheets', 'Computer Style Sheets', 'Colorful Style Sheets'],
+        answer: 0
+    },
+    { 
+        question: 'Which HTML tag is used to define an unordered list?',
+        options: ['<ul>', '<ol>', '<li>', '<div>'],
+        answer: 0
+    },
+    { 
+        question: 'What is the correct way to include an external JavaScript file named "script.js"?',
+        options: ['<script href="script.js">', '<script src="script.js">', '<javascript src="script.js">', '<link rel="script" href="script.js">'],
+        answer: 1
+    },
+    { 
+        question: 'Which property is used in CSS to change the text color of an element?',
+        options: ['text-color', 'color', 'font-color', 'text-style'],
+        answer: 1
+    },
+    { 
+        question: 'What is the correct CSS syntax to select an element with id "myElement"?',
+        options: ['#myElement', '.myElement', 'element#myElement', 'id.myElement'],
+        answer: 0
+    },
+    { 
+        question: 'Inside which HTML element do we put the JavaScript?',
+        options: ['<head>', '<body>', '<script>', '<javascript>'],
+        answer: 1
+    },
+    { 
+        question: 'Which of the following is a correct way to comment in JavaScript?',
+        options: ['// This is a comment', '<!-- This is a comment -->', '/* This is a comment */', '%% This is a comment'],
+        answer: 0
+    },
+    { 
+        question: 'Which CSS property is used to set the background color of an element?',
+        options: ['background-color', 'color', 'text-color', 'bgcolor'],
+        answer: 0
+    },
+    { 
+        question: 'What does HTML stand for?',
+        options: ['Hyperlinks and Text Markup Language', 'Home Tool Markup Language', 'Hyper Text Markup Language', 'Hyper Tool Markup Language'],
+        answer: 2
+    },
+    { 
+        question: 'Which HTML attribute is used to define inline styles?',
+        options: ['class', 'style', 'css', 'inline'],
+        answer: 1
+    },
+    { 
+        question: 'What does the "document.getElementById()" method return in JavaScript?',
+        options: ['The first element with the specified ID', 'All elements with the specified ID', 'The parent element of the specified ID', 'An array of elements with the specified ID'],
+        answer: 0
+    },
+    { 
+        question: 'Which CSS property is used to control the spacing between lines of text?',
+        options: ['line-spacing', 'text-spacing', 'letter-spacing', 'line-height'],
+        answer: 3
+    },
+    { 
+        question: 'Which event occurs when the user clicks on an HTML element?',
+        options: ['onmouseclick', 'onclick', 'onchange', 'onhover'],
+        answer: 1
+    },
+    { 
+        question: 'What does the "console.log()" function do?',
+        options: ['Display a message box', 'Prints content to the console', 'Opens the browser console', 'Displays an alert'],
+        answer: 1
+    },
+    { 
+        question: 'What is the correct syntax for referring to an external script called "script.js"?',
+        options: ['<script src="script.js">', '<script href="script.js">', '<javascript src="script.js">', '<link rel="script" href="script.js">'],
+        answer: 0
+    },
+    { 
+        question: 'Which CSS property is used to make text bold?',
+        options: ['text-style', 'font-weight', 'font-bold', 'bold-text'],
+        answer: 1
+    },
+    { 
+        question: 'Which HTML element is used to define a hyperlink?',
+        options: ['<link>', '<a>', '<href>', '<hyperlink>'],
+        answer: 1
+    },
+    { 
+        question: 'What does the CSS property "display: none;" do?',
+        options: ['Hides the element', 'Makes the element visible', 'Displays the element inline', 'Moves the element to the front'],
+        answer: 0
+    },
+    { 
+        question: 'What does the JavaScript "typeof" operator return when used with a string?',
+        options: ['String', 'Number', 'Boolean', 'Object'],
+        answer: 0
+    },
+    { 
+        question: 'Which CSS property is used to add shadows to text?',
+        options: ['text-shadow', 'shadow', 'text-effect', 'font-shadow'],
+        answer: 0
+    },
+    { 
+        question: 'What is the correct JavaScript syntax for creating a new array?',
+        options: ['let colors = {};', 'let colors = [];', 'new Array colors = {};', 'new Array[];'],
+        answer: 1
+    },
+    { 
+        question: 'Which HTML element is used for creating a table row?',
+        options: ['<row>', '<tr>', '<td>', '<table>'],
+        answer: 1
+    },
+    { 
+        question: 'What is the result of 10 + "5" in JavaScript?',
+        options: ['15', '105', '10 + "5"', 'Error'],
+        answer: 1
+    },
+    { 
+        question: 'How do you add a comment in CSS?',
+        options: ['/* This is a comment */', '// This is a comment', '<!-- This is a comment -->', '" This is a comment'],
+        answer: 0
+    },
+    { 
+        question: 'Which HTML attribute specifies an alternate text for an image?',
+        options: ['src', 'alt', 'title', 'image'],
+        answer: 1
+    },
+    { 
+        question: 'Which CSS property is used to change the size of text?',
+        options: ['text-size', 'font-size', 'size', 'text-style'],
+        answer: 1
+    }
+    // Add more HTML/CSS/JS questions...
+],
+
+'python': [
+{ question: 'What is the correct syntax to output "Hello World" in Python?', options: ['echo("Hello World")', 'print("Hello World")', 'console.log("Hello World")', 'printf("Hello World")'], answer: 1 },
+{ question: 'Which statement is used for exiting a loop in Python?', options: ['exit', 'quit', 'break', 'continue'], answer: 2 },
+// Add more Python questions
+{ question: 'What method can be used to remove whitespace from the beginning and end of a string in Python?', options: ['trim()', 'strip()', 'clean()', 'clear()'], answer: 1 },
+{ question: 'In Python, what is used to represent a block of code that should be executed repeatedly?', options: ['function', 'method', 'loop', 'class'], answer: 2 },
+{ question: 'What will the following Python code output?\n\nx = [1, 2, 3]\nprint(x[1])', options: ['1', '2', '3', 'Error'], answer: 1 },
+{ question: 'Which of the following is a valid Python comment?', options: ['// This is a comment', '# This is a comment', '/* This is a comment */', '<!-- This is a comment -->'], answer: 1 },
+{ question: 'What is the result of the expression 3 * (2 + 5) in Python?', options: ['15', '21', '10', '35'], answer: 3 },
+{ question: 'Which Python keyword is used to define a function?', options: ['func', 'def', 'define', 'function'], answer: 1 },
+{ question: 'Which data type is used to store a sequence of characters in Python?', options: ['int', 'float', 'str', 'list'], answer: 2 },
+{ question: 'What will the following Python code output?\n\nprint("Hello" + " " + "World")', options: ['HelloWorld', 'Hello World', '"Hello" + " " + "World"', 'Error'], answer: 1 },
+{ question: 'What is the output of the following Python code?\n\nx = 5\ny = x + 3\nprint(y)', options: ['5', '8', '15', 'Error'], answer: 1 },
+{ question: 'Which of the following is used to define a list in Python?', options: ['( )', '[ ]', '{ }', '< >'], answer: 1 },
+{ question: 'What does the built-in `len()` function return in Python?', options: ['The number of items in a list', 'The total characters in a string', 'The size of a file', 'The length of a tuple'], answer: 0 },
+{ question: 'Which statement is used to exit from a loop prematurely in Python?', options: ['halt', 'exit', 'break', 'stop'], answer: 2 },
+{ question: 'What is the correct way to create a function in Python?', options: ['function myFunction():', 'def myFunction():', 'method myFunction():', 'void myFunction()'], answer: 1 },
+{ question: 'Which method is used to remove the last item from a list in Python?', options: ['pop()', 'remove()', 'delete()', 'clear()'], answer: 0 },
+{ question: 'What is the result of the expression `2 ** 3` in Python?', options: ['6', '8', '16', 'None of the above'], answer: 2 },
+{ question: 'Which operator is used for string concatenation in Python?', options: ['&', '+', '-', '*'], answer: 1 },
+{ question: 'What will the following Python code output?\n\nfruits = ["apple", "banana", "cherry"]\nprint(fruits[1])', options: ['apple', 'banana', 'cherry', 'Error'], answer: 1 },
+{ question: 'Which method is used to insert an item at a specified index in a list in Python?', options: ['add()', 'insert()', 'append()', 'push()'], answer: 1 },
+{ question: 'What does the `range()` function return in Python?', options: ['A list of numbers', 'A generator object', 'A tuple of numbers', 'An iterator object'], answer: 1 },
+{ question: 'What is the correct way to comment out multiple lines of code in Python?', options: ['// This is a comment', '/* This is a comment */', '# This is a comment', '<!-- This is a comment -->'], answer: 2 },
+{ question: 'Which of the following is NOT a valid variable name in Python?', options: ['my_variable', '_variable', '2variable', 'variable2'], answer: 2 },
+{ question: 'What method is used to return the index of the first occurrence of a specified value in a list in Python?', options: ['index()', 'find()', 'search()', 'locate()'], answer: 0 },
+{ question: 'Which of the following is a correct way to create an empty list in Python?', options: ['list = []', 'list = {}', 'list = [None]', 'list = ()'], answer: 0 },
+{ question: 'What is the result of `10 % 3` in Python?', options: ['3', '1', '0', '2'], answer: 1 },
+],
+'algorithms': [
+{ question: 'What is a data structure that consists of a collection of elements, each identified by at least one array index or key?', options: ['Array', 'Queue', 'Stack', 'Tree'], answer: 0 },
+{ question: 'Which algorithm sorts by repeatedly stepping through the list, comparing adjacent elements, and swapping them if they are in the wrong order?', options: ['Insertion Sort', 'Selection Sort', 'Bubble Sort', 'Merge Sort'], answer: 2 },
+// Add more algorithms questions
+{ question: 'What is the time complexity of bubble sort?', options: ['O(n)', 'O(n log n)', 'O(n^2)', 'O(log n)'], answer: 2 },
+{ question: 'Which search algorithm requires the array to be sorted before performing the search?', options: ['Binary Search', 'Linear Search', 'Depth-First Search', 'Breadth-First Search'], answer: 0 },
+{ question: 'Which data structure uses Last-In-First-Out (LIFO) order?', options: ['Queue', 'Stack', 'Heap', 'Tree'], answer: 1 },
+{ question: 'Which algorithm uses a divide and conquer strategy to sort elements?', options: ['Insertion Sort', 'Merge Sort', 'Quick Sort', 'Selection Sort'], answer: 1 },
+{ question: 'What is a dynamic programming technique used to optimize recursive algorithms?', options: ['Memoization', 'Greedy', 'Backtracking', 'Branch and Bound'], answer: 0 },
+{ question: 'Which algorithm is used to find the shortest path in a weighted graph?', options: ['Breadth-First Search (BFS)', 'Depth-First Search (DFS)', 'Dijkstra\'s Algorithm', 'Prim\'s Algorithm'], answer: 2 },
+{ question: 'Which sorting algorithm has the best time complexity in most cases?', options: ['Bubble Sort', 'Selection Sort', 'Merge Sort', 'Quick Sort'], answer: 2 },
+{ question: 'Which algorithm constructs a minimum spanning tree for a weighted graph?', options: ['Kruskal\'s Algorithm', 'Prim\'s Algorithm', 'Dijkstra\'s Algorithm', 'Bellman-Ford Algorithm'], answer: 1 },
+{ question: 'What is the worst-case time complexity of the Quick Sort algorithm?', options: ['O(n)', 'O(n log n)', 'O(n^2)', 'O(log n)'], answer: 2 },
+{ question: 'Which algorithm is used to traverse or visit all the nodes of a graph systematically?', options: ['Depth-First Search (DFS)', 'Breadth-First Search (BFS)', 'Dijkstra\'s Algorithm', 'Kruskal\'s Algorithm'], answer: 0 },
+{ question: 'Which data structure allows elements to be added or removed from both ends?', options: ['Queue', 'Deque', 'Stack', 'Heap'], answer: 1 },
+{ question: 'Which sorting algorithm works by repeatedly dividing the unsorted array into two halves?', options: ['Bubble Sort', 'Insertion Sort', 'Merge Sort', 'Quick Sort'], answer: 2 },
+{ question: 'Which algorithm is used to find the shortest path in an unweighted graph?', options: ['Bellman-Ford Algorithm', 'Floyd-Warshall Algorithm', 'Dijkstra\'s Algorithm', 'Breadth-First Search (BFS)'], answer: 3 },
+{ question: 'What data structure is typically used to implement a priority queue?', options: ['Array', 'Linked List', 'Heap', 'Stack'], answer: 2 },
+{ question: 'Which algorithm is used to find the maximum flow in a flow network?', options: ['Ford-Fulkerson Algorithm', 'Dijkstra\'s Algorithm', 'Prim\'s Algorithm', 'Kruskal\'s Algorithm'], answer: 0 },
+{ question: 'Which algorithm is an example of a backtracking technique?', options: ['Breadth-First Search (BFS)', 'Depth-First Search (DFS)', 'Binary Search', 'Merge Sort'], answer: 1 },
+{ question: 'What is the worst-case time complexity of the Merge Sort algorithm?', options: ['O(n)', 'O(n log n)', 'O(n^2)', 'O(log n)'], answer: 1 },
+{ question: 'Which data structure is based on the principle of Last-In-First-Out (LIFO)?', options: ['Queue', 'Heap', 'Stack', 'Linked List'], answer: 2 },
+{ question: 'Which algorithm is used to find the strongly connected components in a graph?', options: ['Breadth-First Search (BFS)', 'Depth-First Search (DFS)', 'Kosaraju\'s Algorithm', 'Prim\'s Algorithm'], answer: 2 },
+{ question: 'What algorithm is used to solve the single-source shortest path problem on a weighted, directed graph?', options: ['Dijkstra\'s Algorithm', 'Prim\'s Algorithm', 'Bellman-Ford Algorithm', 'Floyd-Warshall Algorithm'], answer: 0 },
+{ question: 'Which data structure allows elements to be added or removed from both ends, providing constant-time operations?', options: ['Queue', 'Deque', 'Stack', 'Heap'], answer: 1 },
+{ question: 'Which algorithm is used to find the Minimum Spanning Tree (MST) of a graph?', options: ['Kruskal\'s Algorithm', 'Prim\'s Algorithm', 'Dijkstra\'s Algorithm', 'Bellman-Ford Algorithm'], answer: 0 },
+{ question: 'Which sorting algorithm has the worst-case time complexity of O(n^2)?', options: ['Merge Sort', 'Quick Sort', 'Bubble Sort', 'Selection Sort'], answer: 2 },
+{ question: 'What algorithm is used to find the shortest path between all pairs of nodes in a graph?', options: ['Floyd-Warshall Algorithm', 'Dijkstra\'s Algorithm', 'Bellman-Ford Algorithm', 'Prim\'s Algorithm'], answer: 0 }
+],
+
+'artificial-intelligence': [
+{ question: 'What is Artificial Intelligence (AI)?', options: ['A type of computer chip', 'A branch of computer science that aims to create intelligent machines', 'A programming language', 'A new video game genre'], answer: 1 },
+{ question: 'Which technique is used in AI to enable machines to learn from data and improve over time without explicit programming?', options: ['Supervised Learning', 'Unsupervised Learning', 'Reinforcement Learning', 'Deep Learning'], answer: 1 },
+{ question: 'What is the "Turing Test"?', options: ['A test to check the performance of computer hardware', 'A test to determine if a machine can exhibit human-like intelligence', 'A test to assess computer security measures', 'A test to evaluate software usability'], answer: 1 },
+{ question: 'Which programming language is commonly used in AI development and research?', options: ['Java', 'Python', 'C++', 'JavaScript'], answer: 1 },
+{ question: 'What is a neural network?', options: ['A network of computers used for distributed computing', 'A computational model inspired by the human brain', 'A type of database used in AI applications', 'A method for compressing large datasets'], answer: 1 },
+{ question: 'Which AI technique focuses on mimicking the process of natural selection seen in biological organisms?', options: ['Genetic Algorithms', 'Fuzzy Logic', 'Expert Systems', 'Natural Language Processing'], answer: 0 },
+{ question: 'What is the goal of reinforcement learning?', options: ['To analyze large datasets', 'To optimize decision-making through trial and error', 'To recognize patterns in unstructured data', 'To generate human-like text'], answer: 1 },
+{ question: 'Which AI application involves training a machine to perform specific tasks by providing examples and feedback?', options: ['Natural Language Processing', 'Machine Learning', 'Speech Recognition', 'Computer Vision'], answer: 1 },
+{ question: 'What is a chatbot?', options: ['A hardware device used to process AI algorithms', 'A program that simulates conversation with human users', 'A type of AI-powered robot', 'A specialized computer mouse'], answer: 1 },
+{ question: 'Which AI technique involves organizing knowledge into structured sets of facts and rules?', options: ['Genetic Algorithms', 'Fuzzy Logic', 'Expert Systems', 'Neural Networks'], answer: 2 },
+{ question: 'What is the primary focus of natural language processing (NLP)?', options: ['Generating random text', 'Analyzing biological data', 'Understanding and processing human language', 'Simulating natural environments'], answer: 2 },
+{ question: 'Which AI technique is used to make decisions by reasoning through uncertain or incomplete information?', options: ['Machine Learning', 'Fuzzy Logic', 'Genetic Algorithms', 'Expert Systems'], answer: 1 },
+{ question: 'What is computer vision?', options: ['A technique for enhancing computer display quality', 'A field of AI that enables machines to interpret visual information', 'A method for improving computer processing speed', 'A type of virtual reality technology'], answer: 1 },
+{ question: 'Which AI technique involves teaching a machine to classify objects or make predictions based on labeled training data?', options: ['Deep Learning', 'Reinforcement Learning', 'Natural Language Processing', 'Expert Systems'], answer: 0 },
+{ question: 'What is the main purpose of autonomous vehicles?', options: ['To reduce traffic congestion', 'To improve public transportation', 'To enable self-driving cars using AI technology', 'To enhance GPS navigation systems'], answer: 2 },
+{ question: 'Which AI application involves analyzing and interpreting human speech?', options: ['Machine Translation', 'Speech Recognition', 'Text Summarization', 'Sentiment Analysis'], answer: 1 },
+{ question: 'What is the "singularity" in the context of AI?', options: ['A programming language designed for AI applications', 'A theoretical point when AI surpasses human intelligence', 'A popular AI research conference', 'A method for optimizing neural networks'], answer: 1 },
+{ question: 'Which AI technique is used to generate human-like text based on patterns in large datasets?', options: ['Natural Language Processing', 'Deep Learning', 'Fuzzy Logic', 'Genetic Algorithms'], answer: 0 },
+{ question: 'What is the purpose of image recognition in AI?', options: ['To enhance image quality for printing', 'To identify objects or patterns in images', 'To create artistic visualizations', 'To develop computer-generated graphics'], answer: 1 },
+{ question: 'Which AI technique focuses on reasoning with uncertainty and imprecision?', options: ['Machine Learning', 'Fuzzy Logic', 'Expert Systems', 'Genetic Algorithms'], answer: 1 },
+{ question: 'What is the main goal of AI ethics?', options: ['To maximize profits from AI technologies', 'To ensure responsible and ethical use of AI', 'To develop advanced AI algorithms', 'To compete in AI competitions'], answer: 1 },
+{ question: 'Which AI technique involves teaching machines to perform tasks by imitating human behavior?', options: ['Natural Language Processing', 'Machine Learning', 'Robotics', 'Computer Vision'], answer: 1 },
+{ question: 'What is the purpose of sentiment analysis in AI?', options: ['To analyze weather patterns', 'To classify emotions expressed in text', 'To improve search engine rankings', 'To enhance virtual reality experiences'], answer: 1 },
+{ question: 'Which AI application involves understanding and generating human-like speech?', options: ['Speech Recognition', 'Machine Translation', 'Text Summarization', 'Sentiment Analysis'], answer: 0 },
+{ question: 'What is the role of AI in recommendation systems?', options: ['To optimize advertising campaigns', 'To suggest personalized content or products to users', 'To automate manufacturing processes', 'To predict stock market trends'], answer: 1 },
+{ question: 'Which AI technique is used to make decisions based on learned patterns and past experiences?', options: ['Reinforcement Learning', 'Fuzzy Logic', 'Genetic Algorithms', 'Expert Systems'], answer: 0 }
+],
+'data-structures-algorithms': [
+        { question: 'What is a data structure that allows you to access elements based on a key?', options: ['Array', 'Queue', 'Stack', 'Hash Table'], answer: 3 },
+        { question: 'Which data structure uses Last-In-First-Out (LIFO) order?', options: ['Queue', 'Stack', 'Linked List', 'Tree'], answer: 1 },
+        { question: 'Which data structure represents a hierarchical structure with a root value and children nodes?', options: ['Array', 'Queue', 'Stack', 'Tree'], answer: 3 },
+        { question: 'What data structure is best suited for implementing a FIFO (First-In-First-Out) order?', options: ['Array', 'Queue', 'Stack', 'Hash Table'], answer: 1 },
+        { question: 'Which data structure allows efficient insertion and deletion of elements from both ends?', options: ['Array', 'Queue', 'Deque', 'Linked List'], answer: 2 },
+        { question: 'What type of data structure is a graph?', options: ['Linear', 'Non-linear', 'Sequential', 'Hierarchical'], answer: 1 },
+        { question: 'Which data structure stores a collection of elements with each element identified by an index?', options: ['Array', 'Linked List', 'Tree', 'Hash Table'], answer: 0 },
+        { question: 'Which data structure is used to implement priority queues?', options: ['Array', 'Heap', 'Linked List', 'Tree'], answer: 1 },
+        { question: 'What algorithm is used to traverse or visit all nodes in a graph?', options: ['Breadth-First Search (BFS)', 'Depth-First Search (DFS)', 'Dijkstra\'s Algorithm', 'Kruskal\'s Algorithm'], answer: 0 },
+        { question: 'Which sorting algorithm has an average-case time complexity of O(n log n)?', options: ['Bubble Sort', 'Selection Sort', 'Merge Sort', 'Quick Sort'], answer: 2 },
+        { question: 'What algorithm is used to find the shortest path between nodes in a weighted graph?', options: ['Breadth-First Search (BFS)', 'Depth-First Search (DFS)', 'Dijkstra\'s Algorithm', 'Prim\'s Algorithm'], answer: 2 },
+        { question: 'Which algorithm is used to find the minimum spanning tree of a graph?', options: ['Kruskal\'s Algorithm', 'Prim\'s Algorithm', 'Dijkstra\'s Algorithm', 'Bellman-Ford Algorithm'], answer: 0 },
+        { question: 'What is the worst-case time complexity of the Binary Search algorithm?', options: ['O(1)', 'O(log n)', 'O(n)', 'O(n log n)'], answer: 1 },
+        { question: 'Which data structure is typically used for implementing recursive algorithms?', options: ['Array', 'Linked List', 'Stack', 'Queue'], answer: 2 },
+        { question: 'Which algorithm is used to efficiently find the closest pair of points among a set of points in a 2D plane?', options: ['Breadth-First Search (BFS)', 'Depth-First Search (DFS)', 'Dijkstra\'s Algorithm', 'Closest Pair Algorithm'], answer: 3 },
+        { question: 'What is the main advantage of using a Hash Table data structure?', options: ['Constant-time average case for insert, delete, and search operations', 'Preserves insertion order of elements', 'Allows duplicate elements', 'Uses a stack-based data storage'], answer: 0 },
+        { question: 'Which sorting algorithm works by repeatedly dividing the unsorted array into two halves?', options: ['Bubble Sort', 'Insertion Sort', 'Merge Sort', 'Quick Sort'], answer: 2 },
+        { question: 'What is the purpose of Breadth-First Search (BFS) algorithm?', options: ['Finding the shortest path in a weighted graph', 'Finding the minimum spanning tree of a graph', 'Traversing or visiting all nodes of a graph', 'Exploring as far as possible along each branch before backtracking'], answer: 2 },
+        { question: 'Which data structure is commonly used to implement graphs?', options: ['Array', 'Hash Table', 'Linked List', 'Adjacency List'], answer: 3 },
+        { question: 'What algorithm is used to find the maximum flow in a flow network?', options: ['Dijkstra\'s Algorithm', 'Prim\'s Algorithm', 'Ford-Fulkerson Algorithm', 'Kruskal\'s Algorithm'], answer: 2 },
+        { question: 'What data structure is used to efficiently implement a priority queue?', options: ['Heap', 'Stack', 'Linked List', 'Queue'], answer: 0 },
+        { question: 'Which algorithm is an example of a divide and conquer strategy?', options: ['Bubble Sort', 'Insertion Sort', 'Merge Sort', 'Selection Sort'], answer: 2 },
+        { question: 'What is the worst-case time complexity of the Quick Sort algorithm?', options: ['O(n)', 'O(n log n)', 'O(n^2)', 'O(log n)'], answer: 2 },
+        { question: 'Which data structure is based on the principle of Last-In-First-Out (LIFO)?', options: ['Queue', 'Heap', 'Stack', 'Linked List'], answer: 2 },
+        { question: 'What algorithm is used to find the strongly connected components in a graph?', options: ['Breadth-First Search (BFS)', 'Depth-First Search (DFS)', 'Kosaraju\'s Algorithm', 'Prim\'s Algorithm'], answer: 2 }
+    ],
+    'cybersecurity-cryptography': [
+        { question: 'What is the purpose of a firewall in network security?', options: ['To prevent unauthorized access', 'To encrypt data transmissions', 'To secure physical servers', 'To enhance website performance'], answer: 0 },
+        { question: 'Which encryption algorithm is commonly used for secure communication over the Internet?', options: ['RSA', 'AES', 'DES', 'SHA'], answer: 1 },
+        { question: 'What does VPN stand for?', options: ['Virtual Private Network', 'Very Personal Network', 'Virtual Protocol Network', 'Visible Public Network'], answer: 0 },
+        { question: 'Which type of attack involves an attacker trying many possible passwords or passphrases to gain unauthorized access?', options: ['Denial of Service (DoS) attack', 'Phishing attack', 'Brute-force attack', 'SQL injection'], answer: 2 },
+        { question: 'What is the purpose of multi-factor authentication (MFA)?', options: ['To use multiple encryption algorithms simultaneously', 'To verify identity using multiple authentication methods', 'To protect against viruses and malware', 'To secure physical access to a building'], answer: 1 },
+        { question: 'Which security measure involves scrambling data using a secret key to make it unreadable without the key?', options: ['Hashing', 'Salting', 'Encryption', 'Decryption'], answer: 2 },
+        { question: 'What vulnerability does phishing exploit?', options: ['Software bugs', 'Human error or ignorance', 'Network misconfigurations', 'Physical security weaknesses'], answer: 1 },
+        { question: 'What is the purpose of penetration testing?', options: ['To intercept encrypted communications', 'To simulate cyberattacks to identify security vulnerabilities', 'To install security patches', 'To recover lost data'], answer: 1 },
+        { question: 'Which security principle states that users should only have access to the resources necessary for their legitimate purpose?', options: ['Least Privilege', 'Security by Obscurity', 'Role-based Access Control', 'Two-factor Authentication'], answer: 0 },
+        { question: 'What does DNS stand for in the context of networking?', options: ['Domain Name System', 'Digital Network Security', 'Dynamic Network Services', 'Data Network Solutions'], answer: 0 },
+        { question: 'Which cryptographic protocol is commonly used to secure web traffic (HTTP)?', options: ['TLS/SSL', 'SSH', 'IPsec', 'PGP'], answer: 0 },
+        { question: 'What is the goal of a DDoS (Distributed Denial of Service) attack?', options: ['To gain unauthorized access to a system', 'To encrypt sensitive data', 'To flood a network or server with excessive traffic', 'To steal user credentials'], answer: 2 },
+        { question: 'Which type of malware encrypts a victim\'s files and demands payment to decrypt them?', options: ['Adware', 'Spyware', 'Ransomware', 'Trojan Horse'], answer: 2 },
+        { question: 'Which security mechanism protects data by converting it into a fixed-size string of characters?', options: ['Encryption', 'Hashing', 'Salting', 'Decryption'], answer: 1 },
+        { question: 'What is the primary purpose of a digital certificate?', options: ['To prevent brute-force attacks', 'To authenticate the identity of a website or server', 'To encrypt email messages', 'To detect phishing scams'], answer: 1 },
+        { question: 'Which cybersecurity practice involves updating software regularly to protect against known vulnerabilities?', options: ['Whitelisting', 'Backup and Recovery', 'Patch Management', 'Intrusion Detection'], answer: 2 },
+        { question: 'What is a common method used to secure wireless networks?', options: ['MAC filtering', 'Firewall configuration', 'Data encryption', 'All of the above'], answer: 3 },
+        { question: 'Which term refers to a technique used to verify the integrity and authenticity of a message?', options: ['Phishing', 'Spoofing', 'Digital Signature', 'Packet Sniffing'], answer: 2 },
+        { question: 'What is the primary purpose of antivirus software?', options: ['To encrypt sensitive data', 'To monitor network traffic', 'To detect and remove malware', 'To block phishing emails'], answer: 2 },
+        { question: 'Which security protocol provides secure communication between a web browser and a web server?', options: ['FTP', 'HTTP', 'SSL/TLS', 'SMTP'], answer: 2 },
+        { question: 'What is the term for the process of converting plaintext into ciphertext?', options: ['Decryption', 'Encoding', 'Hashing', 'Encryption'], answer: 3 },
+        { question: 'Which type of attack involves sending fraudulent communications to obtain sensitive information?', options: ['Phishing', 'Denial of Service (DoS)', 'Man-in-the-Middle (MitM)', 'SQL Injection'], answer: 0 },
+        { question: 'What is the main purpose of a firewall?', options: ['To prevent unauthorized access to a network', 'To increase internet speed', 'To manage network hardware', 'To encrypt data transmissions'], answer: 0 },
+        { question: 'Which cryptographic technique uses a single key for both encryption and decryption?', options: ['Public Key Cryptography', 'Asymmetric Cryptography', 'Symmetric Cryptography', 'RSA Encryption'], answer: 2 },
+        { question: 'What is the term for a software program that appears legitimate but performs malicious activities?', options: ['Spyware', 'Ransomware', 'Adware', 'Trojan Horse'], answer: 3 }
+    ],
+
+    'cloud-computing': [
+    { question: 'What is Cloud Computing?', options: ['A method to store data locally on personal computers', 'A system to access computing resources over the internet', 'A technique to run software only on physical servers', 'A technology used for printing documents remotely'], answer: 1 },
+    { question: 'Which of the following is not a characteristic of Cloud Computing?', options: ['Scalability', 'Resource pooling', 'Physical servers', 'On-demand self-service'], answer: 2 },
+    { question: 'What is SaaS in Cloud Computing?', options: ['Software as a Service', 'System as a Service', 'Security as a Service', 'Storage as a Service'], answer: 0 },
+    { question: 'Which cloud service model allows users to deploy their own applications onto the cloud infrastructure?', options: ['Infrastructure as a Service (IaaS)', 'Platform as a Service (PaaS)', 'Software as a Service (SaaS)', 'Function as a Service (FaaS)'], answer: 1 },
+    { question: 'Which cloud deployment model involves a mix of on-premises, private cloud, and public cloud services?', options: ['Public Cloud', 'Private Cloud', 'Hybrid Cloud', 'Community Cloud'], answer: 2 },
+    { question: 'What is the purpose of auto-scaling in Cloud Computing?', options: ['To automatically shut down idle servers', 'To automatically adjust resources based on demand', 'To automatically install software updates', 'To automatically backup data to multiple locations'], answer: 1 },
+    { question: 'Which of the following is a widely used public cloud platform?', options: ['VMware', 'OpenStack', 'Kubernetes', 'Amazon Web Services (AWS)'], answer: 3 },
+    { question: 'What is the role of a hypervisor in virtualization?', options: ['To manage physical servers', 'To provide APIs for cloud services', 'To create and manage virtual machines', 'To secure network communications'], answer: 2 },
+    { question: 'Which Cloud Computing service model provides virtualized computing resources over the internet?', options: ['IaaS', 'PaaS', 'SaaS', 'FaaS'], answer: 0 },
+    { question: 'What is a benefit of Cloud Computing?', options: ['Limited scalability', 'High initial setup costs', 'Reduced maintenance overhead', 'Dependence on physical infrastructure'], answer: 2 },
+    { question: 'Which programming language is commonly used for developing applications deployed on cloud platforms?', options: ['Java', 'C++', 'Python', 'Ruby'], answer: 2 },
+    { question: 'What is the role of a CDN (Content Delivery Network) in Cloud Computing?', options: ['To manage cloud resources', 'To optimize database queries', 'To distribute content to end-users efficiently', 'To secure cloud networks'], answer: 2 },
+    { question: 'Which cloud service model is suitable for developers who want to focus on application development without managing underlying infrastructure?', options: ['IaaS', 'PaaS', 'SaaS', 'FaaS'], answer: 1 },
+    { question: 'What is the main advantage of serverless computing (FaaS)?', options: ['Reduced infrastructure management', 'Full control over physical servers', 'Low scalability', 'Long setup times'], answer: 0 },
+    { question: 'Which technology allows multiple virtual machines to run on a single physical server?', options: ['Hypervisor', 'Containerization', 'Load balancer', 'Microservices'], answer: 0 },
+    { question: 'What is data redundancy in Cloud Computing?', options: ['A method to reduce data transfer latency', 'A technique to optimize database performance', 'The duplication of data to ensure reliability', 'The distribution of data across multiple servers'], answer: 2 },
+    { question: 'Which cloud security measure protects data by encrypting it before storing it in the cloud?', options: ['Two-factor authentication (2FA)', 'Firewalls', 'Data masking', 'Encryption'], answer: 3 },
+    { question: 'What is an example of a private cloud platform?', options: ['Google Cloud Platform (GCP)', 'Microsoft Azure', 'IBM Cloud', 'OpenStack'], answer: 3 },
+    { question: 'Which cloud deployment model provides cloud services to a specific community or group?', options: ['Public Cloud', 'Private Cloud', 'Hybrid Cloud', 'Community Cloud'], answer: 3 },
+    { question: 'What does IaaS stand for in Cloud Computing?', options: ['Infrastructure as a Service', 'Internet as a Service', 'Integration as a Service', 'Interface as a Service'], answer: 0 },
+    { question: 'Which cloud computing characteristic allows users to access resources on-demand without human intervention?', options: ['Resource pooling', 'Rapid elasticity', 'Measured service', 'On-demand self-service'], answer: 3 },
+    { question: 'What is the primary concern in Cloud Computing related to data privacy and security?', options: ['Latency', 'Accessibility', 'Compliance', 'Reliability'], answer: 2 },
+    { question: 'Which cloud service model offers ready-to-use software applications accessed over the internet?', options: ['IaaS', 'PaaS', 'SaaS', 'FaaS'], answer: 2 },
+    { question: 'What is the purpose of load balancing in cloud environments?', options: ['To reduce resource usage', 'To optimize database queries', 'To evenly distribute incoming network traffic', 'To automate server backups'], answer: 2 },
+    { question: 'Which cloud computing characteristic ensures that users only pay for the resources they use?', options: ['Resource pooling', 'On-demand self-service', 'Measured service', 'Rapid elasticity'], answer: 2 },
+    { question: 'What is the main advantage of using a public cloud deployment model?', options: ['Enhanced security controls', 'Full control over physical servers', 'Cost-effectiveness and scalability', 'Isolation from other users'], answer: 2 }
+],
+
+'internet-of-things': [
+        { question: 'What does IoT stand for?', options: ['Internet of Technology', 'Internet of Things', 'Intranet of Things', 'Innovation of Things'], answer: 1 },
+        { question: 'Which wireless technology is commonly used in IoT for short-range communication between devices?', options: ['Bluetooth', 'Wi-Fi', 'NFC', 'Z-Wave'], answer: 0 },
+        { question: 'Which protocol is commonly used for IoT communication over IP networks?', options: ['HTTP', 'TCP', 'UDP', 'MQTT'], answer: 3 },
+        { question: 'What is the purpose of a sensor in an IoT system?', options: ['To process data', 'To store data', 'To measure and collect data', 'To display data'], answer: 2 },
+        { question: 'Which component is responsible for making decisions and taking actions based on IoT data?', options: ['Actuator', 'Gateway', 'Cloud Server', 'Microcontroller'], answer: 0 },
+        { question: 'What is a typical power source for IoT devices?', options: ['Solar energy', 'Nuclear power', 'Hydraulic power', 'Coal power'], answer: 0 },
+        { question: 'Which type of network is commonly used to connect IoT devices over a wide area?', options: ['LAN', 'MAN', 'WAN', 'PAN'], answer: 2 },
+        { question: 'Which IoT application area focuses on making cities smarter and more efficient?', options: ['Smart agriculture', 'Industrial IoT', 'Smart home', 'Smart city'], answer: 3 },
+        { question: 'What does RFID stand for?', options: ['Radio Frequency Identification', 'Remote Field Identifier', 'Rapid Field Identification', 'Rugged Frequency Interface Device'], answer: 0 },
+        { question: 'Which communication model is commonly used in IoT to connect devices directly to each other without requiring a central server?', options: ['Client-Server model', 'Star topology', 'Mesh networking', 'Peer-to-Peer model'], answer: 2 },
+        { question: 'Which security challenge is a major concern in IoT deployments?', options: ['Data encryption', 'Device authentication', 'Network segmentation', 'DDoS attacks'], answer: 1 },
+        { question: 'What is a common IoT platform used for cloud-based data processing and device management?', options: ['Amazon Web Services (AWS)', 'Google Cloud Platform (GCP)', 'Microsoft Azure', 'All of the above'], answer: 3 },
+        { question: 'Which programming language is commonly used for IoT device programming?', options: ['Python', 'Java', 'C', 'Swift'], answer: 2 },
+        { question: 'What is the main benefit of using MQTT (Message Queuing Telemetry Transport) in IoT?', options: ['Low power consumption', 'High data throughput', 'Lightweight messaging protocol', 'Strong security features'], answer: 2 },
+        { question: 'Which IoT communication protocol is designed for low-power, low-data-rate applications?', options: ['Zigbee', 'LoRaWAN', 'Sigfox', '6LoWPAN'], answer: 1 },
+        { question: 'Which IoT deployment model involves devices communicating directly with cloud services without intermediate gateways?', options: ['Edge computing', 'Fog computing', 'Cloud computing', 'Device-to-Cloud (D2C)'], answer: 3 },
+        { question: 'What is the purpose of edge computing in IoT?', options: ['Centralized data processing', 'Data storage in remote locations', 'Real-time data processing at the network edge', 'Device management'], answer: 2 },
+        { question: 'Which IoT application area focuses on optimizing agricultural processes using sensor data?', options: ['Smart agriculture', 'Smart home', 'Industrial IoT', 'Smart city'], answer: 0 },
+        { question: 'What is a common challenge associated with IoT device connectivity?', options: ['Interoperability', 'Data encryption', 'Physical security', 'Cloud storage'], answer: 0 },
+        { question: 'Which IoT component manages communication between different IoT devices and networks?', options: ['Sensor', 'Gateway', 'Actuator', 'Cloud server'], answer: 1 },
+        { question: 'What is the purpose of a microcontroller in an IoT device?', options: ['Data storage', 'User interface', 'Power supply', 'Control and processing'], answer: 3 },
+        { question: 'Which wireless technology is commonly used for long-range IoT communication?', options: ['Bluetooth', 'Wi-Fi', 'Z-Wave', 'LoRa'], answer: 3 },
+        { question: 'Which security mechanism is used to verify the integrity and authenticity of IoT device firmware?', options: ['Two-factor authentication', 'Code signing', 'Firewall', 'Intrusion detection system'], answer: 1 },
+        { question: 'Which IoT application area focuses on enhancing energy efficiency and reducing costs in buildings?', options: ['Smart agriculture', 'Smart home', 'Industrial IoT', 'Smart city'], answer: 1 },
+        { question: 'What is a common use case of IoT in healthcare?', options: ['Smart traffic management', 'Remote patient monitoring', 'Smart home automation', 'Industrial automation'], answer: 1 },
+        { question: 'Which IoT architecture component stores and processes IoT data generated by devices?', options: ['Sensor', 'Gateway', 'Cloud server', 'Actuator'], answer: 2 }
+    ],
+
+    'big-data-analytics': [
+    { question: 'What is Big Data characterized by?', options: ['Volume, Variety, Velocity', 'Volume, Value, Viscosity', 'Velocity, Veracity, Variability', 'Value, Validation, Volume'], answer: 0 },
+    { question: 'Which technology is commonly used for processing and analyzing large volumes of data in parallel across distributed computing resources?', options: ['SQL', 'Hadoop', 'Python', 'MongoDB'], answer: 1 },
+    { question: 'What is the process of examining large datasets to uncover hidden patterns, unknown correlations, and other useful information called?', options: ['Data Mining', 'Data Warehousing', 'Data Cleansing', 'Data Visualization'], answer: 0 },
+    { question: 'Which programming language is commonly used for data analysis and statistical computing?', options: ['Java', 'R', 'C++', 'PHP'], answer: 1 },
+    { question: 'What does ETL stand for in the context of data processing?', options: ['Extract, Transform, Load', 'Evaluate, Transform, Log', 'Extract, Transmit, Log', 'Evaluate, Transmit, Load'], answer: 0 },
+    { question: 'Which technology is designed to handle and process real-time data streams from various sources?', options: ['ETL', 'Spark', 'NoSQL', 'Flink'], answer: 3 },
+    { question: 'Which term refers to the process of cleaning and correcting raw data before processing and analysis?', options: ['Data Modeling', 'Data Integration', 'Data Cleansing', 'Data Visualization'], answer: 2 },
+    { question: 'Which type of analytics focuses on describing past events and understanding historical data?', options: ['Descriptive Analytics', 'Predictive Analytics', 'Prescriptive Analytics', 'Diagnostic Analytics'], answer: 0 },
+    { question: 'Which technology is used for storing and managing unstructured data in a distributed fashion?', options: ['MySQL', 'HBase', 'PostgreSQL', 'SQLite'], answer: 1 },
+    { question: 'Which algorithm is used in machine learning to group similar objects into sets?', options: ['Decision Tree', 'K-means', 'Random Forest', 'Linear Regression'], answer: 1 },
+    { question: 'What does OLAP stand for in the context of data analytics?', options: ['Online Learning and Predictions', 'Online Analytics Processing', 'Online Analytical Processing', 'Optimized Logical Analytics Protocol'], answer: 2 },
+    { question: 'Which visualization tool is commonly used for creating interactive charts and graphs based on data?', options: ['Tableau', 'Power BI', 'QlikView', 'D3.js'], answer: 0 },
+    { question: 'Which technology is used to extract insights and patterns from natural language text data?', options: ['NLP (Natural Language Processing)', 'OCR (Optical Character Recognition)', 'API (Application Programming Interface)', 'DNS (Domain Name System)'], answer: 0 },
+    { question: 'Which statistical measure is used to describe the variability or spread of a dataset?', options: ['Mean', 'Median', 'Variance', 'Standard Deviation'], answer: 3 },
+    { question: 'Which data structure is used to efficiently store and retrieve data based on key-value pairs?', options: ['Array', 'Queue', 'Stack', 'HashMap'], answer: 3 },
+    { question: 'Which technique is used to reduce the number of dimensions in a dataset while preserving its important characteristics?', options: ['Dimension Reduction', 'Feature Engineering', 'Principal Component Analysis (PCA)', 'Linear Regression'], answer: 2 },
+    { question: 'Which technique is used to fill in missing values in a dataset based on the values of other variables?', options: ['Data Imputation', 'Data Normalization', 'Data Aggregation', 'Data Integration'], answer: 0 },
+    { question: 'Which type of analysis involves predicting future outcomes based on historical data and patterns?', options: ['Descriptive Analysis', 'Predictive Analysis', 'Prescriptive Analysis', 'Diagnostic Analysis'], answer: 1 },
+    { question: 'Which database technology is designed for handling structured data and providing ACID (Atomicity, Consistency, Isolation, Durability) transactions?', options: ['MongoDB', 'Cassandra', 'MySQL', 'PostgreSQL'], answer: 2 },
+    { question: 'Which technique is used to identify outliers or anomalies in a dataset?', options: ['Clustering', 'Regression', 'Outlier Detection', 'Classification'], answer: 2 },
+    { question: 'Which statistical test is used to determine the correlation strength and direction between two continuous variables?', options: ['Chi-square test', 'T-test', 'ANOVA', 'Pearson correlation'], answer: 3 },
+    { question: 'Which algorithm is used to make predictions based on input data by learning from historical data patterns?', options: ['Decision Tree', 'K-nearest Neighbors (KNN)', 'Support Vector Machine (SVM)', 'Logistic Regression'], answer: 0 },
+    { question: 'Which technology is used for managing and analyzing semi-structured data with schema flexibility?', options: ['Hadoop', 'MongoDB', 'SQL Server', 'Oracle'], answer: 1 },
+    { question: 'Which technique is used to group similar items based on their attributes or features?', options: ['Regression', 'Clustering', 'Classification', 'Dimensionality Reduction'], answer: 1 },
+    { question: 'Which data processing method is used to aggregate, summarize, and analyze data over a specific time interval?', options: ['Batch Processing', 'Stream Processing', 'Real-time Processing', 'ETL Processing'], answer: 0 }
+],
+
+'software-engineering-development': [
+{ question: 'What is the purpose of version control systems like Git?', options: ['Code collaboration', 'Code backup', 'Tracking changes', 'All of the above'], answer: 3 },
+{ question: 'What does "SDLC" stand for in software development?', options: ['Software Development Language and Code', 'System Design and Lifecycle', 'Software Development Lifecycle', 'Systematic Design for Large Companies'], answer: 2 },
+{ question: 'Which software development methodology emphasizes incremental, iterative work sequences?', options: ['Waterfall', 'Agile', 'Scrum', 'RAD'], answer: 1 },
+{ question: 'What is the primary goal of unit testing?', options: ['Testing individual software components', 'Testing the entire system', 'Performance benchmarking', 'User acceptance testing'], answer: 0 },
+{ question: 'What is the role of a product owner in Agile Scrum methodology?', options: ['Developing code', 'Managing project timelines', 'Representing customer interests', 'Leading daily stand-up meetings'], answer: 2 },
+{ question: 'Which phase of the SDLC involves gathering and analyzing requirements from stakeholders?', options: ['Design', 'Implementation', 'Testing', 'Requirement Analysis'], answer: 3 },
+{ question: 'What does the term "CI/CD" refer to in software development?', options: ['Customer Integration and Continuous Delivery', 'Continuous Integration and Continuous Deployment', 'Critical Issues and Continuous Development', 'Code Iteration and Deployment'], answer: 1 },
+{ question: 'What is the purpose of code refactoring?', options: ['Optimizing code performance', 'Rewriting code from scratch', 'Adding new features', 'Improving code readability and maintainability'], answer: 3 },
+{ question: 'What is the primary benefit of using design patterns in software development?', options: ['Simplifying project documentation', 'Standardizing code formatting', 'Improving code efficiency and reusability', 'Reducing development timelines'], answer: 2 },
+{ question: 'Which testing technique involves testing the software functionality without looking into the internal code?', options: ['White-box testing', 'Black-box testing', 'Integration testing', 'Unit testing'], answer: 1 },
+{ question: 'What is the main purpose of user acceptance testing (UAT)?', options: ['Testing individual software components', 'Ensuring compatibility with different browsers', 'Verifying the software meets user requirements', 'Analyzing code performance'], answer: 2 },
+{ question: 'Which development principle encourages the separation of concerns and modular design?', options: ['Don\'t Repeat Yourself (DRY)', 'Single Responsibility Principle (SRP)', 'Keep It Simple, Stupid (KISS)', 'Big Design Up Front (BDUF)'], answer: 1 },
+{ question: 'What is the primary objective of code reviews in software development?', options: ['Ensuring compliance with coding standards', 'Testing software across multiple platforms', 'Debugging code', 'Implementing new features'], answer: 0 },
+{ question: 'Which software development model is known for its sequential flow of phases?', options: ['Agile', 'Scrum', 'Waterfall', 'DevOps'], answer: 2 },
+{ question: 'What is the purpose of continuous integration (CI) in software development?', options: ['Automating software testing', 'Ensuring code compatibility', 'Regularly merging code changes into a shared repository', 'Managing project timelines'], answer: 2 },
+{ question: 'What does the term "bug triage" refer to in software testing?', options: ['Classifying and prioritizing reported bugs', 'Fixing critical bugs', 'Releasing bug fixes to users', 'Testing software performance'], answer: 0 },
+{ question: 'Which software development methodology emphasizes rapid prototyping and user feedback?', options: ['Waterfall', 'Agile', 'Scrum', 'RAD'], answer: 3 },
+{ question: 'What is the primary purpose of load testing?', options: ['Testing individual software components', 'Analyzing user behavior', 'Measuring system performance under specific conditions', 'Code optimization'], answer: 2 },
+{ question: 'Which phase of the SDLC involves converting system requirements into a detailed design?', options: ['Design', 'Implementation', 'Testing', 'Requirement Analysis'], answer: 0 },
+{ question: 'What is the role of a scrum master in Agile Scrum methodology?', options: ['Developing code', 'Managing project timelines', 'Representing customer interests', 'Facilitating team meetings and removing obstacles'], answer: 3 },
+{ question: 'Which type of software testing focuses on finding defects by feeding the software with unexpected inputs?', options: ['System testing', 'Acceptance testing', 'Stress testing', 'Fuzz testing'], answer: 3 },
+{ question: 'What does the term "DevOps" represent in software development?', options: ['Development and Operations collaboration', 'Developer Options', 'Device Optimization', 'Debugging Operations'], answer: 0 },
+{ question: 'What is the purpose of a use case diagram in software design?', options: ['Displaying the system architecture', 'Describing the interaction between users and the system', 'Testing individual software components', 'Analyzing code performance'], answer: 1 },
+{ question: 'Which development principle promotes the avoidance of unnecessary complexity?', options: ['Don\'t Repeat Yourself (DRY)', 'Single Responsibility Principle (SRP)', 'Keep It Simple, Stupid (KISS)', 'Big Design Up Front (BDUF)'], answer: 2 },
+{ question: 'What is the primary objective of regression testing?', options: ['Ensuring code readability', 'Testing software across multiple platforms', 'Validating changes to existing code', 'Optimizing code performance'], answer: 2 },
+{ question: 'Which testing technique involves examining the internal logic and structure of the software code?', options: ['Black-box testing', 'White-box testing', 'Integration testing', 'Acceptance testing'], answer: 1 }
+],
+
+'computer-vision': [
+        { question: 'What is Computer Vision?', options: ['A branch of computer science focused on the interaction between computers and human vision', 'A technology that allows computers to see in the dark', 'A method of programming computers using visual programming languages', 'An application that enhances computer graphics'], answer: 0 },
+        { question: 'Which of the following is NOT a common task in Computer Vision?', options: ['Object detection', 'Image classification', 'Speech recognition', 'Face recognition'], answer: 2 },
+        { question: 'What is a key component of many Computer Vision systems that mimics the behavior of the human eye?', options: ['Digital camera', 'Sensor array', 'Convolutional neural network', 'Feature extractor'], answer: 1 },
+        { question: 'Which deep learning architecture is commonly used for tasks like image classification and object detection?', options: ['Recurrent Neural Network (RNN)', 'Long Short-Term Memory (LSTM)', 'Convolutional Neural Network (CNN)', 'Generative Adversarial Network (GAN)'], answer: 2 },
+        { question: 'What is an essential step in preprocessing images for Computer Vision tasks?', options: ['Adding noise', 'Resizing', 'Increasing brightness', 'Converting to grayscale'], answer: 3 },
+        { question: 'Which technique is used to extract meaningful features from images in Computer Vision?', options: ['Principal Component Analysis (PCA)', 'K-means clustering', 'Gradient descent', 'Regularization'], answer: 0 },
+        { question: 'Which algorithm is commonly used for image segmentation?', options: ['K-means clustering', 'Linear regression', 'Depth-first search', 'Breadth-first search'], answer: 0 },
+        { question: 'What is the process of assigning a label to an image based on its content called?', options: ['Image classification', 'Image segmentation', 'Object detection', 'Feature extraction'], answer: 0 },
+        { question: 'Which method is used for detecting and recognizing faces in images?', options: ['Support Vector Machine (SVM)', 'Haar cascade classifiers', 'Decision trees', 'Linear regression'], answer: 1 },
+        { question: 'Which technique is used to train deep learning models for Computer Vision tasks?', options: ['Gradient descent', 'Hough transform', 'Dijkstra\'s algorithm', 'Breadth-first search'], answer: 0 },
+        { question: 'Which of the following is a popular dataset used for training and evaluating Computer Vision models?', options: ['ImageNet', 'Amazon Web Services (AWS)', 'Microsoft Excel', 'Google Maps'], answer: 0 },
+        { question: 'What type of neural network architecture is commonly used for image generation tasks?', options: ['Recurrent Neural Network (RNN)', 'Convolutional Neural Network (CNN)', 'Generative Adversarial Network (GAN)', 'Autoencoder'], answer: 2 },
+        { question: 'What is an essential step in evaluating the performance of a Computer Vision model?', options: ['Cross-validation', 'Random sampling', 'Feature selection', 'Error analysis'], answer: 3 },
+        { question: 'Which technique is used to align two images or objects to enable comparison?', options: ['Edge detection', 'Histogram equalization', 'Image registration', 'Image filtering'], answer: 2 },
+        { question: 'Which method is used for detecting edges and boundaries in images?', options: ['Sobel operator', 'Gaussian blur', 'Median filter', 'Low-pass filter'], answer: 0 },
+        { question: 'What is the purpose of data augmentation in Computer Vision?', options: ['Reducing the size of training data', 'Increasing the complexity of neural networks', 'Improving the performance of models by creating variations in training data', 'Adding noise to images'], answer: 2 },
+        { question: 'Which task involves assigning a label to each pixel in an image?', options: ['Object detection', 'Image segmentation', 'Feature extraction', 'Data augmentation'], answer: 1 },
+        { question: 'What is the main advantage of using convolutional layers in deep learning models for Computer Vision?', options: ['Efficient computation of image features', 'Enhanced memory utilization', 'Improved regularization', 'Simplified model architecture'], answer: 0 },
+        { question: 'Which technique is used to reduce the dimensionality of image data?', options: ['Principal Component Analysis (PCA)', 'K-nearest neighbors (KNN)', 'Logistic regression', 'Random forest'], answer: 0 },
+        { question: 'Which deep learning model architecture is designed for processing sequences of data?', options: ['Convolutional Neural Network (CNN)', 'Long Short-Term Memory (LSTM)', 'Autoencoder', 'Generative Adversarial Network (GAN)'], answer: 1 },
+        { question: 'What is the process of locating and identifying objects in images called?', options: ['Object localization', 'Feature extraction', 'Image classification', 'Data augmentation'], answer: 0 },
+        { question: 'Which method is commonly used for feature matching in Computer Vision?', options: ['SIFT (Scale-Invariant Feature Transform)', 'Binary search', 'Depth-first search', 'K-means clustering'], answer: 0 },
+        { question: 'What technique is used for estimating the motion of objects in consecutive frames of a video?', options: ['Optical flow', 'Image registration', 'Histogram equalization', 'Gaussian blur'], answer: 0 },
+        { question: 'Which metric is commonly used to evaluate the performance of object detection algorithms?', options: ['Mean Average Precision (mAP)', 'Root Mean Square Error (RMSE)', 'F1-score', 'Accuracy'], answer: 0 },
+        { question: 'Which technique is used to generate new images based on existing training examples?', options: ['Transfer learning', 'Data augmentation', 'Image interpolation', 'Image generation'], answer: 3 }
+    ],
+
+    'natural-language-processing': [
+        { question: 'What does NLP stand for?', options: ['Natural Linguistic Processing', 'Neural Language Programming', 'Natural Language Processing', 'Neural Linguistic Programming'], answer: 2 },
+        { question: 'Which task involves determining the syntactic structure of a sentence?', options: ['Named Entity Recognition', 'Text Classification', 'Part-of-Speech Tagging', 'Parsing'], answer: 3 },
+        { question: 'Which technique is used to represent words as dense vectors?', options: ['Word Embeddings', 'Bag-of-Words', 'TF-IDF', 'One-Hot Encoding'], answer: 0 },
+        { question: 'Which algorithm is commonly used for text summarization?', options: ['Naive Bayes', 'PageRank', 'LDA (Latent Dirichlet Allocation)', 'TextRank'], answer: 3 },
+        { question: 'What does TF-IDF stand for?', options: ['Term Frequency-Inverse Document Frequency', 'Total Frequency-Inverse Data Filter', 'Text Frequency-Index Document Frequency', 'Term Frequency-Importance Document Frequency'], answer: 0 },
+        { question: 'Which technique is used to assign grammatical tags to words in a sentence?', options: ['Named Entity Recognition', 'Dependency Parsing', 'Part-of-Speech Tagging', 'Topic Modeling'], answer: 2 },
+        { question: 'Which model is often used for sequence labeling tasks like named entity recognition?', options: ['BERT (Bidirectional Encoder Representations from Transformers)', 'LSTM (Long Short-Term Memory)', 'CRF (Conditional Random Fields)', 'GPT (Generative Pre-trained Transformer)'], answer: 2 },
+        { question: 'What is the goal of sentiment analysis?', options: ['Identify the author of a text', 'Classify the emotion or sentiment expressed in text', 'Summarize the main points of a document', 'Translate text from one language to another'], answer: 1 },
+        { question: 'Which method involves predicting the next word in a sequence based on the context?', options: ['Word2Vec', 'Skip-gram', 'Language Modeling', 'GloVe'], answer: 2 },
+        { question: 'What type of neural network architecture is commonly used in machine translation tasks?', options: ['Convolutional Neural Network (CNN)', 'Recurrent Neural Network (RNN)', 'Transformer', 'Autoencoder'], answer: 2 },
+        { question: 'Which evaluation metric is often used to assess the performance of text classification models?', options: ['Accuracy', 'Precision', 'Recall', 'F1 Score'], answer: 3 },
+        { question: 'Which algorithm is used to determine the topics present in a collection of documents?', options: ['LDA (Latent Dirichlet Allocation)', 'K-Means Clustering', 'Decision Tree', 'SVM (Support Vector Machine)'], answer: 0 },
+        { question: 'Which technique involves generating new text based on a given input?', options: ['Text Summarization', 'Text Classification', 'Machine Translation', 'Language Generation'], answer: 3 },
+        { question: 'Which task involves predicting the grammatical structure of a sentence?', options: ['Named Entity Recognition', 'Dependency Parsing', 'Part-of-Speech Tagging', 'Topic Modeling'], answer: 1 },
+        { question: 'Which method is used to handle words that are out of vocabulary in language models?', options: ['N-grams', 'Subword Tokenization', 'Stopword Removal', 'Stemming'], answer: 1 },
+        { question: 'Which metric is used to measure the similarity between two documents or text passages?', options: ['Euclidean Distance', 'Cosine Similarity', 'Jaccard Similarity', 'Hamming Distance'], answer: 1 },
+        { question: 'What is the primary goal of named entity recognition (NER)?', options: ['Identify the sentiment of a text', 'Recognize and classify named entities in text', 'Summarize a document', 'Translate text to another language'], answer: 1 },
+        { question: 'Which method is used to generate a concise representation of a large text corpus?', options: ['Word Embeddings', 'Dimensionality Reduction', 'Text Clustering', 'Text Normalization'], answer: 0 },
+        { question: 'Which technique is used to predict the probability distribution over possible sequences of words?', options: ['Language Modeling', 'Word2Vec', 'Topic Modeling', 'Bag-of-Words'], answer: 0 },
+        { question: 'Which deep learning architecture is effective for handling sequential data and text?', options: ['CNN (Convolutional Neural Network)', 'RNN (Recurrent Neural Network)', 'GAN (Generative Adversarial Network)', 'BERT (Bidirectional Encoder Representations from Transformers)'], answer: 1 },
+        { question: 'Which method is used to reduce the dimensionality of word embeddings?', options: ['PCA (Principal Component Analysis)', 'SVM (Support Vector Machine)', 'LDA (Latent Dirichlet Allocation)', 'K-Means Clustering'], answer: 0 },
+        { question: 'Which technique is used to generate a summary of a longer text?', options: ['Text Classification', 'Named Entity Recognition', 'Text Summarization', 'Machine Translation'], answer: 2 },
+        { question: 'Which algorithm is used to assign topics to documents based on word distributions?', options: ['Naive Bayes', 'LDA (Latent Dirichlet Allocation)', 'K-Means Clustering', 'SVM (Support Vector Machine)'], answer: 1 },
+        { question: 'Which metric is used to assess the overall performance of a machine translation system?', options: ['BLEU (Bilingual Evaluation Understudy)', 'ROUGE (Recall-Oriented Understudy for Gisting Evaluation)', 'METEOR (Metric for Evaluation of Translation with Explicit ORdering)', 'WER (Word Error Rate)'], answer: 0 },
+        { question: 'Which approach involves predicting the next word given the previous words in a sequence?', options: ['N-grams', 'Bag-of-Words', 'Language Modeling', 'Skip-gram'], answer: 2 },
+        { question: 'What is the main challenge in machine translation?', options: ['Speech recognition', 'Optical character recognition', 'Syntax analysis', 'Preserving meaning and context across languages'], answer: 3 }
+    ],
+
+    'computer-graphics-visualization': [
+    { question: 'What is rasterization in computer graphics?', options: ['Rendering an image as a set of pixels', 'Creating 3D models using polygons', 'Generating vector graphics', 'Applying textures to a 3D scene'], answer: 0 },
+    { question: 'Which type of rendering technique simulates the behavior of light to produce realistic images?', options: ['Ray tracing', 'Rasterization', 'Vector graphics', '3D modeling'], answer: 0 },
+    { question: 'What is the purpose of anti-aliasing in computer graphics?', options: ['Enhancing the brightness of colors', 'Reducing jagged edges in images', 'Adding motion blur to animations', 'Applying depth of field effects'], answer: 1 },
+    { question: 'Which graphics primitive is used to create curves and surfaces based on control points?', options: ['Bezier curve', 'Line segment', 'Polygon', 'Circle'], answer: 0 },
+    { question: 'What does VFX stand for in the context of computer graphics?', options: ['Visual Effects', 'Vector Formula X', 'Virtual FX', 'Video Frame X'], answer: 0 },
+    { question: 'Which type of projection is commonly used to represent 3D scenes on a 2D surface?', options: ['Isometric projection', 'Orthographic projection', 'Oblique projection', 'Perspective projection'], answer: 3 },
+    { question: 'What is a shader in computer graphics?', options: ['A small program used to render textures', 'An algorithm for ray tracing', 'A data structure for 3D modeling', 'A component for controlling lighting effects'], answer: 0 },
+    { question: 'Which technique is used to create the illusion of motion by displaying a rapid sequence of images?', options: ['Rasterization', 'Anti-aliasing', 'Animation', 'Ray tracing'], answer: 2 },
+    { question: 'What is the purpose of Z-buffering in computer graphics?', options: ['Creating wireframe models', 'Handling transparency in images', 'Simulating atmospheric effects', 'Managing depth information for rendering'], answer: 3 },
+    { question: 'Which rendering technique is used to simulate the interaction of light with surfaces?', options: ['Ray tracing', 'Rasterization', 'Vector graphics', 'Frustum culling'], answer: 0 },
+    { question: 'What does GPU stand for in the context of computer graphics?', options: ['Graphics Processor Unit', 'General Processing Unit', 'Graphical Performance Unit', 'General Purpose Utility'], answer: 0 },
+    { question: 'Which technique is used to represent 3D objects by wireframe models?', options: ['Rasterization', 'Ray tracing', '3D modeling', 'Wireframing'], answer: 3 },
+    { question: 'What is a texture map used for in computer graphics?', options: ['Rendering shadows', 'Simulating surface details', 'Creating particle effects', 'Generating procedural content'], answer: 1 },
+    { question: 'Which technique is used to smooth out the appearance of rendered surfaces?', options: ['Shading', 'Clipping', 'Z-buffering', 'Frustum culling'], answer: 0 },
+    { question: 'What is a keyframe in animation?', options: ['A frame used for debugging animations', 'A frame representing a significant pose or position', 'A frame with advanced lighting effects', 'A frame used for rendering shadows'], answer: 1 },
+    { question: 'Which algorithm is used for hidden surface removal in 3D graphics?', options: ['Frustum culling', 'Back-face culling', 'Z-buffering', 'Ray tracing'], answer: 2 },
+    { question: 'What does FOV stand for in the context of computer graphics?', options: ['Field of Vision', 'Focus on View', 'Frame of Video', 'Focal Over Visuals'], answer: 0 },
+    { question: 'Which technique is used to simulate realistic reflections in computer graphics?', options: ['Texture mapping', 'Ray tracing', 'Shading', 'Bump mapping'], answer: 1 },
+    { question: 'What is ambient occlusion in rendering?', options: ['A technique to add ambient lighting', 'A method for anti-aliasing', 'A way to simulate indirect lighting', 'A process to remove occluded objects'], answer: 2 },
+    { question: 'Which type of 3D transformation changes the size of an object without changing its shape?', options: ['Translation', 'Rotation', 'Scaling', 'Shearing'], answer: 2 },
+    { question: 'What is the purpose of a normal map in computer graphics?', options: ['Adding texture to surfaces', 'Simulating realistic lighting effects', 'Creating depth information for bump mapping', 'Generating particle effects'], answer: 2 },
+    { question: 'Which type of shading interpolates colors across the surface of polygons?', options: ['Flat shading', 'Gouraud shading', 'Phong shading', 'Texture shading'], answer: 1 },
+    { question: 'What is a voxel in computer graphics?', options: ['A graphical element used for rendering', 'A three-dimensional pixel', 'A type of vector graphic', 'A unit of shader computation'], answer: 1 },
+    { question: 'Which technique is used to simulate the appearance of 3D surfaces using 2D images?', options: ['Texture mapping', 'Ray tracing', 'Ambient occlusion', 'Shadow mapping'], answer: 0 },
+    { question: 'What is a particle system used for in computer graphics?', options: ['Rendering wireframe models', 'Simulating complex behaviors of objects', 'Creating procedural textures', 'Applying post-processing effects'], answer: 1 }
+]
+
+
+
+
+
+        };
+        
+        const quizContainer = document.getElementById('quiz');
+        const submitButton = document.getElementById('submit-btn');
+        
+        document.querySelectorAll('.topic').forEach(topic => {
+            topic.addEventListener('click', () => {
+                const selectedTopic = topic.dataset.topic;
+                generateQuiz(selectedTopic);
+            });
+        });
+        
+        function generateQuiz(topic) {
+            quizContainer.innerHTML = '';
+            topics[topic].forEach((q, index) => {
+                const questionElement = document.createElement('div');
+                questionElement.classList.add('question');
+                questionElement.innerHTML = `<p><strong>Question ${index + 1}:</strong> ${q.question}</p>`;
+                q.options.forEach((option, optIndex) => {
+                    const optionElement = document.createElement('div');
+                    optionElement.innerHTML = `<label><input type="radio" name="question${index}" value="${optIndex}"> ${option}</label>`;
+                    questionElement.appendChild(optionElement);
+                });
+                quizContainer.appendChild(questionElement);
+            });
+        }
+        
+        submitButton.addEventListener('click', () => {
+            const totalQuestions = Object.keys(topics).reduce((acc, topic) => acc + topics[topic].length, 0);
+            let score = 0;
+        
+            for (let i = 0; i < totalQuestions; i++) {
+                const selectedOption = document.querySelector(`input[name="question${i}"]:checked`);
+                if (selectedOption) {
+                    const questionIndex = parseInt(selectedOption.name.replace('question', ''));
+                    const selectedAnswer = parseInt(selectedOption.value);
+                    const correctAnswer = topics[Object.keys(topics)[Math.floor(questionIndex / 10)]][questionIndex % 10].answer;
+                    if (selectedAnswer === correctAnswer) {
+                        score++;
+                    }
+                }
+            }
+        
+            const resultContainer = document.createElement('div');
+            resultContainer.setAttribute('id', 'result');
+            resultContainer.textContent = `You scored ${score} out of ${totalQuestions}!`;
+            quizContainer.appendChild(resultContainer);
+        });
+        
+        
+        
+    </script>
+</body>
+</html>

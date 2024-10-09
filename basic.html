@@ -1,0 +1,690 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Quiz Generator</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        
+        .container {
+            text-align: center;
+        }
+        
+        select {
+            margin-bottom: 10px;
+            padding: 5px;
+            font-size: 16px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        #quiz-container {
+            margin-top: 20px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AI Quiz Generator</h1>
+        <label for="topic">Select a Topic:</label>
+        <select id="topic">
+            <option value="science">Science</option>
+            <option value="history">History</option>
+            <option value="technology">Technology</option>
+        </select>
+        <button onclick="generateQuiz()">Generate Quiz</button>
+        <div id="quiz-container"></div>
+    </div>
+<script>
+   
+   // Initialize Firebase (replace with your Firebase config)
+const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_AUTH_DOMAIN",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_STORAGE_BUCKET",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+// Start quiz function
+
+    <script src="script.js"></script>
+</body>
+</html>
+ -->
+ <!-- <!DOCTYPE html>
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>AI Quiz Generator</title>
+     <link rel="stylesheet" href="styles.css">
+     <style>
+         body {
+             font-family: Arial, sans-serif;
+             display: flex;
+             justify-content: center;
+             align-items: center;
+             height: 100vh;
+             margin: 0;
+         }
+         
+         .container {
+             text-align: center;
+         }
+         
+         select {
+             margin-bottom: 10px;
+             padding: 5px;
+             font-size: 16px;
+         }
+         
+         button {
+             padding: 10px 20px;
+             font-size: 16px;
+             cursor: pointer;
+         }
+         
+         #quiz-container {
+             margin-top: 20px;
+         }
+     </style>
+ </head>
+ <body>
+     <div class="container">
+         <h1>AI Quiz Generator</h1>
+         <label for="topic">Select a Topic:</label>
+         <select id="topic">
+             <option value="science">Science</option>
+             <option value="history">History</option>
+             <option value="technology">Technology</option>
+         </select>
+         <button onclick="generateQuiz()">Generate Quiz</button>
+         <div id="quiz-container"></div>
+     </div>
+ 
+     <script>
+         async function generateQuiz() {
+             const selectedTopic = document.getElementById('topic').value;
+             const quizContainer = document.getElementById('quiz-container');
+             quizContainer.innerHTML = ''; // Clear previous content
+ 
+             try {
+                 const response = await fetch(`https://api.openai.com/v1/engines/davinci-codex/completions`, {
+                     method: 'POST',
+                     headers: {
+                         'Content-Type': 'application/json',
+                         'Authorization': 'Bearer sk-proj-sacvWJM4F8aYYzPGqpmST3BlbkFJVvM0bPzktRTjkNle6wZ8'
+                     },
+                     body: JSON.stringify({
+                         prompt: `Generate quiz questions about ${selectedTopic}.`,
+                         max_tokens: 150
+                     })
+                 });
+ 
+                 const data = await response.json();
+                 const quizQuestions = data.choices[0].text.trim().split('\n');
+ 
+                 quizQuestions.forEach(question => {
+                     const questionElement = document.createElement('div');
+                     questionElement.textContent = question;
+                     quizContainer.appendChild(questionElement);
+                 });
+             } catch (error) {
+                 console.error('Error generating quiz questions:', error);
+                 quizContainer.textContent = 'Failed to generate quiz questions. Please try again.';
+             }
+         }
+     </script>
+ </body>
+ </html>
+  -->
+
+  <!-- <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>AI Quiz Generator</title>
+      <link rel="stylesheet" href="styles.css">
+      <style>
+          body {
+              font-family: Arial, sans-serif;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              height: 100vh;
+              margin: 0;
+          }
+          
+          .container {
+              text-align: center;
+          }
+          
+          select {
+              margin-bottom: 10px;
+              padding: 5px;
+              font-size: 16px;
+          }
+          
+          button {
+              padding: 10px 20px;
+              font-size: 16px;
+              cursor: pointer;
+          }
+          
+          #quiz-container {
+              margin-top: 20px;
+          }
+  
+          .quiz-question {
+              margin-bottom: 10px;
+          }
+  
+          .quiz-option {
+              display: block;
+              margin-bottom: 5px;
+          }
+      </style>
+  </head>
+  <body>
+      <div class="container">
+          <h1>AI Quiz Generator</h1>
+          <label for="topic">Select a Topic:</label>
+          <select id="topic">
+              <option value="science">Science</option>
+              <option value="history">History</option>
+              <option value="technology">Technology</option>
+          </select>
+          <button onclick="generateQuiz()">Generate Quiz</button>
+          <div id="quiz-container"></div>
+      </div>
+  
+      <script>
+          async function generateQuiz() {
+              const selectedTopic = document.getElementById('topic').value;
+              const quizContainer = document.getElementById('quiz-container');
+              quizContainer.innerHTML = ''; // Clear previous content
+  
+              try {
+                  const response = await fetch(`https://api.duckduckgo.com/?q=${selectedTopic}&format=json`);
+                  const data = await response.json();
+  
+                  if (data.AbstractText) {
+                      const quizQuestion = data.AbstractText;
+                      const quizOptions = [data.AbstractSource, data.AbstractURL, data.Image];
+  
+                      const questionElement = document.createElement('div');
+                      questionElement.classList.add('quiz-question');
+                      questionElement.textContent = quizQuestion;
+                      quizContainer.appendChild(questionElement);
+  
+                      quizOptions.forEach(option => {
+                          if (option) {
+                              const optionElement = document.createElement('div');
+                              optionElement.classList.add('quiz-option');
+                              optionElement.textContent = option;
+                              quizContainer.appendChild(optionElement);
+                          }
+                      });
+                  } else {
+                      quizContainer.textContent = 'No information found for this topic.';
+                  }
+              } catch (error) {
+                  console.error('Error generating quiz:', error);
+                  quizContainer.textContent = 'Failed to generate quiz. Please try again.';
+              }
+          }
+      </script>
+  </body>
+  </html>
+   -->
+
+   <!DOCTYPE html>
+   <html>
+   <head>
+     <title>AI Quiz Generator</title>
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+     <style>
+       .question {
+         margin-bottom: 50px;
+       }
+       .submit-quiz {
+           float: right;
+       }
+       button {
+         margin-left: 20px;
+       }
+       .loading {
+         display: flex;
+         justify-content: center;
+         align-items: center;
+       }
+       #quiz-container {
+         margin-bottom: 50px;
+       }
+     </style>
+   </head>
+   <body>
+     <div class="container">
+       <div class="row">
+           <div class="col-md-10 offset-md-1">
+               <h1>AI Quiz Generator</h1>
+               <hr />
+           </div>
+       </div>
+       <div class="row">
+           <div class="col-md-10 offset-md-1">
+               <div class="form-inline">
+                   <div class="form-group mb-2">
+                     <input type="number" class="form-control" id="numQuestions" placeholder="Number of Questions">
+                   </div>
+                   <div class="form-group mx-sm-2 mb-2">
+                     <input type="number" class="form-control" id="numOptions" placeholder="Number of Options">
+                   </div>
+                   <div class="form-group mx-sm-2 mb-2">
+                     <input type="text" class="form-control" id="subject" placeholder="Subject here">
+                   </div>
+                   <button type="submit" class="btn btn-primary mb-2" onclick="generateQuiz()">Generate Quiz</button>
+                   <button type="submit" class="btn btn-danger mb-2" onclick="reloadPage()">Restart</button>
+                 </div>
+                 <hr />
+           </div>
+       </div>
+       <div id="quiz-container"></div>
+     <script>
+   
+      /* GLOBAL VARIABLES */
+const loadingSvg = createLoadingSvg();
+
+/* UTILS FUNCTIONS */
+
+function validateJSON(jsonData, jsonTemplate) {
+    for (const key in jsonTemplate) {
+        if (!jsonData.hasOwnProperty(key)) {
+            return false; // Key does not exist in the JSON data
+        }
+
+        if (typeof jsonData[key] !== typeof jsonTemplate[key]) {
+            return false; // Type mismatch for the key
+        }
+
+        if (typeof jsonData[key] === 'object' && !Array.isArray(jsonData[key])) {
+            if (!validateJSON(jsonData[key], jsonTemplate[key])) {
+                return false; // Recursive call for nested objects
+            }
+        }
+    }
+
+    return true; // JSON matches the template structure
+}
+
+function reloadPage() {
+    location.reload(true);
+}
+
+function createEl(elType, className) {
+    const el = document.createElement(elType);
+    if (className) {
+        const classes = className.split(" ");
+        classes.forEach(className => {
+            el.classList.add(className);
+        });
+    }
+
+    return el;
+}
+
+function isInt(value) {
+    return typeof value === 'number' && Number.isInteger(value);
+}
+
+function isString(value) {
+    return typeof value === 'string' && value.length > 1;
+}
+
+function isChar(value) {
+    return typeof value === 'string' && value.length === 1;
+}
+
+function setQuiz(myQuiz) {
+    localStorage.setItem('myQuiz', JSON.stringify(myQuiz));
+}
+
+function getQuiz() {
+    return JSON.parse(localStorage.getItem('myQuiz'));
+}
+
+function createLoadingSvg() {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    svg.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
+    svg.setAttribute("style", "margin: auto; background: #fff; display: block;");
+    svg.setAttribute("width", "250px");
+    svg.setAttribute("height", "100px");
+    svg.setAttribute("viewBox", "0 0 100 100");
+    svg.setAttribute("preserveAspectRatio", "xMidYMid");
+
+    const robotBody = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    robotBody.setAttribute("x", "33");
+    robotBody.setAttribute("y", "45");
+    robotBody.setAttribute("width", "34");
+    robotBody.setAttribute("height", "34");
+    robotBody.setAttribute("fill", "#1e87f0");
+
+    const robotHead = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    robotHead.setAttribute("x", "40");
+    robotHead.setAttribute("y", "26");
+    robotHead.setAttribute("width", "20");
+    robotHead.setAttribute("height", "20");
+    robotHead.setAttribute("fill", "#1e87f0");
+
+    const eye1 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    eye1.setAttribute("cx", "45");
+    eye1.setAttribute("cy", "32");
+    eye1.setAttribute("r", "2");
+    eye1.setAttribute("fill", "#fff");
+
+    const eye2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    eye2.setAttribute("cx", "55");
+    eye2.setAttribute("cy", "32");
+    eye2.setAttribute("r", "2");
+    eye2.setAttribute("fill", "#fff");
+
+    const animateBody = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+    animateBody.setAttribute("attributeName", "fill-opacity");
+    animateBody.setAttribute("begin", "0s");
+    animateBody.setAttribute("dur", "1.2s");
+    animateBody.setAttribute("values", "1;.2;1");
+    animateBody.setAttribute("calcMode", "linear");
+    animateBody.setAttribute("repeatCount", "indefinite");
+
+    svg.appendChild(robotBody);
+    svg.appendChild(robotHead);
+    svg.appendChild(eye1);
+    svg.appendChild(eye2);
+    svg.appendChild(animateBody);
+
+    const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    text.setAttribute("x", "50");
+    text.setAttribute("y", "95");
+    text.setAttribute("text-anchor", "middle");
+    text.setAttribute("fill", "#1e87f0");
+    text.setAttribute("id", "loading-text");
+
+    svg.appendChild(text);
+
+    return svg;
+}
+
+function startLoading() {
+    const container = document.getElementById("quiz-container");
+    const loadingContainer = createEl("div");
+    loadingContainer.id = "loading";
+    loadingContainer.appendChild(loadingSvg);
+    container.appendChild(loadingContainer);
+}
+
+function stopLoading() {
+    const el = document.getElementById("loading");
+    if (el) {
+        el.remove();
+    }
+}
+
+function updateLoadingText(text) {
+    const loadingText = document.getElementById("loading-text");
+    if (loadingText) {
+        loadingText.textContent = text;
+    }
+}
+
+function showError(err) {
+    const errDiv = createEl("div", "alert alert-danger");
+    errDiv.innerText = err;
+
+    const quizContainer = document.getElementById("quiz-container");
+    quizContainer.appendChild(errDiv);
+}
+
+function createSubmitQuizFooter() {
+    const rowDiv = createEl("div", "row");
+    const colDiv = createEl("div", "col-md-10 offset-md-1");
+    rowDiv.appendChild(colDiv);
+
+    const btn = createEl("button", "btn btn-primary submit-quiz");
+    btn.textContent = "Submit Quiz";
+    btn.onclick = submitQuiz;
+
+    colDiv.appendChild(btn);
+
+    return rowDiv;
+}
+
+function createResultsFooter() {
+    const rowDiv1 = createEl("div", "row");
+    const colDiv1 = createEl("div", "col-md-10 offset-md-1");
+    const hr = createEl("hr");
+    const rowDiv = createEl("div", "row");
+    const colDiv21 = createEl("div", "col-md-2");
+    const colDiv22 = createEl("div", "col-md-10");
+    const strong = createEl("strong");
+    const resultDiv = createEl("div");
+    resultDiv.id = "result";
+    const br = createEl("br");
+
+    rowDiv1.appendChild(colDiv1);
+    colDiv1.appendChild(hr);
+    colDiv1.appendChild(rowDiv);
+    rowDiv.appendChild(colDiv21);
+    colDiv21.appendChild(strong);
+    strong.textContent = "Results:";
+    rowDiv.appendChild(colDiv22);
+    colDiv22.appendChild(resultDiv);
+    rowDiv.appendChild(br);
+    rowDiv.appendChild(br);
+    rowDiv.appendChild(br);
+
+    return rowDiv1;
+}
+
+function createCardHeader(question, index) {
+    const cardHeader = createEl("div", "card-header");
+    cardHeader.innerText = `${index + 1}. ${question.question}`;
+    return cardHeader;
+}
+
+function createOption(option, optionIndex, questionIndex, isCorrectAnswer) {
+    const optionLabel = document.createElement("label");
+
+    const optionInput = document.createElement("input");
+    optionInput.setAttribute("type", "radio");
+    optionInput.setAttribute("name", `question${questionIndex}`);
+    optionInput.setAttribute("value", option);
+
+    optionLabel.appendChild(optionInput);
+    optionLabel.appendChild(document.createTextNode(` ${option}`));
+
+    if (isCorrectAnswer) {
+        const badge = createEl("span", "badge badge-success");
+        badge.textContent = "Correct";
+        badge.style.display = "none";
+        optionLabel.appendChild(badge);
+    }
+
+    return optionLabel;
+}
+
+function createQuestionCard(question, index) {
+    const cardDiv = createEl("div", "card question");
+    const cardHeader = createCardHeader(question, index);
+    cardDiv.appendChild(cardHeader);
+
+    const listGroup = createEl("ul", "list-group list-group-flush");
+
+    question.options.forEach((option, optionIndex) => {
+        const listGroupItem = createEl("li", "list-group-item");
+        listGroup.appendChild(listGroupItem);
+
+        const isCorrectAnswer = JSON.parse(option.isCorrect);
+        const optionLabel = createOption(option.option, optionIndex, index, isCorrectAnswer);
+        listGroupItem.appendChild(optionLabel);
+    });
+
+    cardDiv.appendChild(listGroup);
+
+    return cardDiv;
+}
+
+function createParagraph(paragraph, imageUrl) {
+    const rowDiv = createEl("div", "row");
+    const colDiv = createEl("div", "col-md-10 offset-md-1");
+    rowDiv.appendChild(colDiv);
+
+    const container = document.createElement("div");
+    container.style.display = "flex";
+    container.style.alignItems = "center";
+    container.style.justifyContent = "flex-end";
+
+    const paragraphEl = document.createElement("p");
+    paragraphEl.textContent = paragraph;
+
+    const image = document.createElement("img");
+    image.src = imageUrl;
+    image.style.marginLeft = "10px";
+
+    container.appendChild(paragraphEl);
+    container.appendChild(image);
+
+    colDiv.appendChild(container);
+
+    return rowDiv;
+}
+
+async function generateQuiz() {
+    const numQuestions = document.getElementById("numQuestions").value;
+    const numOptions = document.getElementById("numOptions").value;
+    const subject = document.getElementById("subject").value;
+
+    if (numQuestions > 0 && numOptions > 1 && subject) {
+        startLoading();
+
+        try {
+            const paragraphsElements = await fetchAndProcessData(subject);
+            const myQuiz = await generateQuestions(numQuestions, numOptions, subject);
+
+            setQuiz(myQuiz);
+            renderQuiz(myQuiz, paragraphsElements);
+        } catch (error) {
+            showError(error);
+        }
+
+        stopLoading();
+    } else {
+        showError("All fields are required. Number of Options needs to be higher than 1.");
+    }
+}
+
+async function fetchAndProcessData(subject) {
+    const contentParagraphsData = generateContentPayload(2, subject);
+    const contentParagraphsResponse = await fetchChatCompletions(contentParagraphsData);
+    const paragraphs = parseParagraphsToArray(contentParagraphsResponse);
+
+    const paragraphsElements = [];
+    for (const paragraph of paragraphs) {
+        const imgPromptData = generateImgPromptPayload(paragraph);
+        const imgPromptResponse = await fetchChatCompletions(imgPromptData);
+        const imgPrompt = parseImgPrompt(imgPromptResponse);
+
+        const imgUrlData = generateImageGenerationPayload(imgPrompt);
+        const imgUrlResponse = await fetchImageGeneration(imgUrlData);
+        const imgUrl = parseImgUrl(imgUrlResponse);
+
+        paragraphsElements.push(createParagraph(paragraph, imgUrl));
+    }
+
+    return paragraphsElements;
+}
+
+async function generateQuestions(numQuestions, numOptions, subject) {
+    const questionsData = generateQuestionPayload(numQuestions, numOptions, subject);
+    const questionsResponse = await fetchChatCompletions(questionsData);
+    const myQuiz = parseQuestionResponseToJson(questionsResponse);
+    return myQuiz;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const generateQuizBtn = document.getElementById("generateQuizBtn");
+    generateQuizBtn.addEventListener("click", generateQuiz);
+});
+
+function getCorrectAnswers(questionIndex) {
+    const quizData = getQuiz();
+    if (quizData && Array.isArray(quizData) && quizData.length > questionIndex) {
+        return quizData[questionIndex].options
+            .filter(opt => opt && JSON.parse(opt.isCorrect))
+            .map(opt => opt.option);
+    }
+    return [];
+}
+
+function isRadioOptionCorrect(options, questionIndex) {
+    const correctAnswers = getCorrectAnswers(questionIndex);
+    for (let j = 0; j < options.length; j++) {
+        if (options[j].checked && correctAnswers.includes(options[j].value)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function submitQuiz() {
+    let score = 0;
+    const quizContainer = document.getElementById("quiz");
+    const questionDivs = quizContainer.getElementsByClassName("question");
+    for (let i = 0; i < questionDivs.length; i++) {
+        const options = questionDivs[i].querySelectorAll("input[type=radio]");
+        if (isRadioOptionCorrect(options, i)) {
+            score++;
+        }
+    }
+
+    updateResults(score);
+    showAllBadges();
+}
+
+function updateResults(score) {
+    const quizData = getQuiz();
+    const totalOfQuestions = quizData.length;
+    const resultContainer = document.getElementById("result");
+    resultContainer.textContent = `Your Score: ${score}/${totalOfQuestions}`;
+}
+
+function showAllBadges() {
+    const quizContainer = document.getElementById("quiz");
+    const badges = quizContainer.getElementsByClassName("badge");
+    for (let i = 0; i < badges.length; i++) {
+        badges[i].style.display = "inline";
+    }
+}
+
+     </script>
+   </body>
+   </html>

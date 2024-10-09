@@ -1,0 +1,2623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Play Quiz</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f8f8f8;
+        }
+        
+        .quiz-container {
+            max-width: 600px;
+            margin: 50px auto;
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            color: black;
+            
+        }
+        
+        h1 {
+            color: #e91e63;
+        }
+        
+        label, input, select, button {
+            margin: 10px 0;
+        }
+        
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #e91e63;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #c2185b;
+            color: black;
+        }
+        
+        .quiz, .result {
+            max-width: 600px;
+            margin: 50px auto;
+            text-align: left;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            color: black;
+        }
+        
+        .result {
+            text-align: center;
+            color: black;
+        }
+        
+        .quiz-container, .quiz, .result {
+            transition: opacity 0.3s ease;
+        }
+        
+        .quiz-container.hidden {
+            opacity: 0;
+            pointer-events: none;
+            color: black;
+        }
+        
+        #question {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: black;
+        }
+        
+        #answers div {
+            padding: 12px;
+            background-color: #fce4ec;
+            color: #333;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        #answers div:hover {
+            background-color: #f8bbd0;
+        }
+        
+
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Play Quiz </h1>
+        <label for="topic">Select Topic:</label>
+        <select id="topic">
+            <option value="ai_ml">Artificial Intelligence and Machine Learning</option>
+            <option value="ds_algo">Data Structures and Algorithms</option>
+            <option value="cybersecurity">Cybersecurity and Cryptography</option>
+            <option value="cloud_computing">Cloud Computing</option>
+            <option value="iot">Internet of Things (IoT)</option>
+            <option value="big_data">Big Data and Data Analytics</option>
+            <option value="software_eng">Software Engineering and Development</option>
+            <option value="computer_vision">Computer Vision</option>
+            <option value="nlp">Natural Language Processing</option>
+            <option value="computer_graphics">Computer Graphics and Visualization</option>
+        
+            <!-- Add more options for other topics -->
+        </select>
+        <label for="duration">Select Duration (minutes):</label>
+        <input type="number" id="duration" min="1" step="1" value="5">
+        <label for="num-questions">Select Number of Questions:</label>
+        <input type="number" id="num-questions" min="1" step="1" value="10">
+        <button onclick="startQuiz()">Start Quiz</button>
+    </div>
+
+    <div class="quiz" id="quiz" style="display: none;">
+        <h2>Quiz in Progress</h2>
+        <div id="question"></div>
+        <div id="answers"></div>
+        <button onclick="nextQuestion()">Next</button>
+    </div>
+
+    <div class="result" id="result" style="display: none;">
+        <h2>Quiz Results</h2>
+        <div id="score"></div>
+        <button onclick="location.reload()">Play Again</button>
+    </div>
+
+    <script src="quiz.js"></script>
+    <script>
+        const quizData = {
+            ai_ml: [
+        { 
+            question: "What is AI?", 
+            answers: ["Artificial Intelligence", "Automated Interaction", "Advanced Interface", "All of the above"], 
+            correct: 0 
+        },
+        { 
+            question: "Which programming language is commonly used in AI development?",
+            answers: ["Python", "Java", "C++", "All of the above"],
+            correct: 0
+        },
+        { 
+            question: "What is machine learning?",
+            answers: ["A subset of AI that allows systems to learn from data and improve over time without being explicitly programmed", "A type of software development", "An advanced robotics technique", "None of the above"],
+            correct: 0
+        },
+        { 
+            question: "What is deep learning?",
+            answers: ["A subfield of machine learning involving artificial neural networks and large datasets", "A type of programming language", "A technique for cybersecurity", "None of the above"],
+            correct: 0
+        },
+        { 
+            question: "What is the 'Turing Test'?",
+            answers: ["A test of a machine's ability to exhibit intelligent behavior equivalent to, or indistinguishable from, that of a human", "A benchmark for software performance", "A security vulnerability test", "None of the above"],
+            correct: 0
+        },
+        { 
+            question: "Which company developed the popular AI assistant 'Siri'?",
+            answers: ["Apple", "Google", "Microsoft", "Amazon"],
+            correct: 0
+        },
+        { 
+            question: "What is reinforcement learning?",
+            answers: ["A type of machine learning where agents learn to make decisions by interacting with an environment", "A method for cloud computing", "A cybersecurity protocol", "None of the above"],
+            correct: 0
+        },
+        { 
+            question: "What are neural networks?",
+            answers: ["A computing system inspired by the structure of the human brain, consisting of interconnected nodes", "A type of quantum computing", "A data visualization technique", "None of the above"],
+            correct: 0
+        },
+        { 
+            question: "What is natural language processing (NLP)?",
+            answers: ["The ability of computers to understand, interpret, and generate human language", "A programming language for beginners", "A type of cybersecurity tool", "None of the above"],
+            correct: 0
+        },
+        { 
+            question: "What is computer vision?",
+            answers: ["A field of AI that enables computers to interpret and understand visual information from the real world", "A type of virtual reality", "An operating system", "None of the above"],
+            correct: 0
+        },
+        { 
+            question: "What is supervised learning?",
+            answers: ["A type of machine learning where the model is trained on labeled data", "A type of software testing", "A cybersecurity defense mechanism", "None of the above"],
+            correct: 0
+        },
+        { 
+            question: "What is unsupervised learning?",
+            answers: ["A type of machine learning where the model learns patterns from unlabeled data", "A type of hardware development", "A cloud computing service", "None of the above"],
+            correct: 0
+        },
+        { 
+            question: "What is a decision tree in machine learning?",
+            answers: ["A flowchart-like structure where each internal node represents a decision based on a feature", "A type of software bug", "A type of networking device", "None of the above"],
+            correct: 0
+        },
+        { 
+            question: "What is overfitting in machine learning?",
+            answers: ["When a model learns the details and noise in the training data to an extent that it negatively impacts the performance of the model on new data", "A type of cloud storage", "A cybersecurity threat", "None of the above"],
+            correct: 0
+        },
+        { 
+            question: "What is transfer learning?",
+            answers: ["A machine learning technique where a model developed for a task is reused as the starting point for a model on a second task", "A method of data encryption", "A programming concept", "None of the above"],
+            correct: 0
+        },
+        { 
+            question: "What is the goal of AI ethics?",
+            answers: ["To ensure that AI systems are developed and used responsibly, ethically, and transparently", "To increase the speed of AI algorithms", "To reduce the complexity of AI models", "None of the above"],
+            correct: 0
+        },
+        { 
+            question: "What is the role of bias in AI?",
+            answers: ["Bias in AI refers to systematic errors in algorithms that result in unfair outcomes", "Bias is irrelevant in AI development", "Bias improves the accuracy of AI models", "None of the above"],
+            correct: 0
+        },
+        { 
+            question: "What is generative adversarial networks (GANs)?",
+            answers: ["A class of machine learning systems where two neural networks contest with each other", "A type of software testing tool", "A cloud computing service", "None of the above"],
+            correct: 0
+        },
+        { 
+            question: "What is AI explainability?",
+            answers: ["The ability to explain how AI models make decisions in a way that is understandable to humans", "A method for data compression", "A type of hardware", "None of the above"],
+            correct: 0
+        },
+        { 
+            question: "What is the difference between AI and machine learning?",
+            answers: ["AI is a broader concept of machines being able to carry out tasks in a smart way, while machine learning is a subset of AI focused on the ability of machines to learn from data", "There is no difference between AI and machine learning", "Machine learning is a broader concept of machines being able to carry out tasks in a smart way, while AI is a subset of machine learning", "None of the above"],
+            correct: 0
+        },
+        { 
+            question: "What is the 'black box' problem in AI?",
+            answers: ["The inability to understand how certain AI models arrive at their decisions", "A type of hardware issue", "A cybersecurity vulnerability", "None of the above"],
+            correct: 0
+        },
+        { 
+            question: "What is the role of data preprocessing in machine learning?",
+            answers: ["Preparing raw data to make it suitable for a machine learning model", "Testing machine learning models", "Developing machine learning algorithms", "None of the above"],
+            correct: 0
+        },
+        { 
+            question: "What is Bayesian inference in machine learning?",
+            answers: ["A method of statistical inference in which Bayes' theorem is used to update the probability for a hypothesis as more evidence or information becomes available", "A type of database management", "A cybersecurity protocol", "None of the above"],
+            correct: 0
+        },
+        { 
+            question: "What is a convolutional neural network (CNN)?",
+            answers: ["A type of neural network designed for processing grid-like data, such as images", "A type of computer monitor", "A cloud computing service", "None of the above"],
+            correct: 0
+        },
+        { 
+            question: "What is data augmentation in deep learning?",
+            answers: ["A technique to artificially expand the size of a training dataset by creating modified versions of images or other data points", "A type of hardware", "A cybersecurity defense mechanism", "None of the above"],
+            correct: 0
+        },
+    ],
+    ds_algo: [
+    { 
+        question: "What is a linked list?",
+        answers: [
+            "A linear data structure", 
+            "A sorting algorithm", 
+            "A type of tree", 
+            "None of the above"
+        ],
+        correct: 0 
+    },
+    { 
+        question: "What is the time complexity of inserting an element into the middle of a singly linked list?",
+        answers: [
+            "O(1)", 
+            "O(n)", 
+            "O(log n)", 
+            "O(n^2)"
+        ],
+        correct: 1 
+    },
+    { 
+        question: "What is a stack?",
+        answers: [
+            "A linear data structure that follows LIFO (Last In, First Out) order", 
+            "A sorting algorithm", 
+            "A type of tree structure", 
+            "None of the above"
+        ],
+        correct: 0 
+    },
+    { 
+        question: "What is a queue?",
+        answers: [
+            "A linear data structure that follows FIFO (First In, First Out) order", 
+            "An efficient sorting algorithm", 
+            "A type of binary tree", 
+            "None of the above"
+        ],
+        correct: 0 
+    },
+    { 
+        question: "Which sorting algorithm has the best worst-case time complexity?",
+        answers: [
+            "Bubble Sort", 
+            "Insertion Sort", 
+            "Quick Sort", 
+            "Merge Sort"
+        ],
+        correct: 3 
+    },
+    { 
+        question: "What data structure is typically used to implement a LIFO behavior?",
+        answers: [
+            "Linked List", 
+            "Stack", 
+            "Queue", 
+            "Binary Search Tree"
+        ],
+        correct: 1 
+    },
+    { 
+        question: "Which data structure uses both FIFO and LIFO operations?",
+        answers: [
+            "Linked List", 
+            "Stack", 
+            "Queue", 
+            "Heap"
+        ],
+        correct: 1 
+    },
+    { 
+        question: "What is binary search?",
+        answers: [
+            "A sorting algorithm", 
+            "A search algorithm that divides the search interval in half each time", 
+            "A data structure for storing binary data", 
+            "None of the above"
+        ],
+        correct: 1 
+    },
+    { 
+        question: "What is the worst-case time complexity of binary search?",
+        answers: [
+            "O(n)", 
+            "O(log n)", 
+            "O(n^2)", 
+            "O(1)"
+        ],
+        correct: 1 
+    },
+    { 
+        question: "Which data structure is used for quick retrieval of data?",
+        answers: [
+            "Heap", 
+            "Stack", 
+            "Queue", 
+            "Hash Table"
+        ],
+        correct: 3 
+    },
+    { 
+        question: "What is the main advantage of using a hash table?",
+        answers: [
+            "It allows for quick insertion and deletion operations", 
+            "It sorts data efficiently", 
+            "It represents data in a tree-like structure", 
+            "None of the above"
+        ],
+        correct: 0 
+    },
+    { 
+        question: "Which algorithm is used for finding the shortest path in a weighted graph?",
+        answers: [
+            "Depth-First Search (DFS)", 
+            "Breadth-First Search (BFS)", 
+            "Dijkstra's Algorithm", 
+            "Prim's Algorithm"
+        ],
+        correct: 2 
+    },
+    { 
+        question: "What is an AVL tree?",
+        answers: [
+            "A type of balanced binary search tree", 
+            "An unbalanced tree structure", 
+            "An algorithm for sorting data", 
+            "None of the above"
+        ],
+        correct: 0 
+    },
+    { 
+        question: "What does DFS stand for in graph traversal?",
+        answers: [
+            "Depth-First Search", 
+            "Directed File System", 
+            "Data Flow System", 
+            "None of the above"
+        ],
+        correct: 0 
+    },
+    { 
+        question: "Which data structure is used for implementing recursion?",
+        answers: [
+            "Queue", 
+            "Stack", 
+            "Linked List", 
+            "Heap"
+        ],
+        correct: 1 
+    },
+    { 
+        question: "What is the primary goal of dynamic programming?",
+        answers: [
+            "To find the maximum element in a list", 
+            "To optimize recursive algorithms by storing intermediate results", 
+            "To perform quick sorting operations", 
+            "None of the above"
+        ],
+        correct: 1 
+    },
+    { 
+        question: "Which algorithm is used for topological sorting?",
+        answers: [
+            "Dijkstra's Algorithm", 
+            "Bellman-Ford Algorithm", 
+            "Prim's Algorithm", 
+            "Kahn's Algorithm"
+        ],
+        correct: 3 
+    },
+    { 
+        question: "What is an adjacency matrix?",
+        answers: [
+            "A data structure used for representing graphs", 
+            "A matrix used for storing intermediate results in dynamic programming", 
+            "A type of tree structure", 
+            "None of the above"
+        ],
+        correct: 0 
+    },
+    { 
+        question: "What is a binary tree?",
+        answers: [
+            "A tree structure where each node has at most two children", 
+            "A tree with only one node", 
+            "A tree with no nodes", 
+            "None of the above"
+        ],
+        correct: 0 
+    },
+    { 
+        question: "What is a priority queue?",
+        answers: [
+            "A data structure where each element has an associated priority", 
+            "A queue that uses FIFO order", 
+            "A stack that follows LIFO order", 
+            "None of the above"
+        ],
+        correct: 0 
+    },
+    { 
+        question: "Which algorithm is used for searching in a sorted array by repeatedly dividing the search interval in half?",
+        answers: [
+            "Binary Search", 
+            "Linear Search", 
+            "Bubble Sort", 
+            "Insertion Sort"
+        ],
+        correct: 0 
+    },
+    { 
+        question: "What is a graph traversal algorithm that starts at the root node and explores each branch completely before moving on to the next branch?",
+        answers: [
+            "Depth-First Search (DFS)", 
+            "Breadth-First Search (BFS)", 
+            "Dijkstra's Algorithm", 
+            "Prim's Algorithm"
+        ],
+        correct: 0 
+    },
+    { 
+        question: "What is an edge in a graph?",
+        answers: [
+            "A node or vertex", 
+            "A path between two nodes", 
+            "A loop in the graph", 
+            "None of the above"
+        ],
+        correct: 1 
+    },
+    { 
+        question: "What is a heap?",
+        answers: [
+            "A special type of binary tree", 
+            "A sorting algorithm", 
+            "A linear data structure", 
+            "None of the above"
+        ],
+        correct: 0 
+    },
+    { 
+        question: "Which sorting algorithm has a worst-case time complexity of O(n^2)?",
+        answers: [
+            "Merge Sort", 
+            "Quick Sort", 
+            "Insertion Sort", 
+            "Bubble Sort"
+        ],
+        correct: 3 
+    }
+],
+cybersecurity: [
+        { 
+            question: "What is cybersecurity?",
+            answers: [
+                "Protecting computer systems and networks from attacks", 
+                "Coding secure software", 
+                "Analyzing big data", 
+                "Designing computer graphics"
+            ],
+            correct: 0 
+        },
+        { 
+            question: "Which of the following is NOT a common cybersecurity threat?",
+            answers: [
+                "Phishing", 
+                "Malware", 
+                "DNS Spoofing", 
+                "Data Compression"
+            ],
+            correct: 3 
+        },
+        { 
+            question: "What does VPN stand for?",
+            answers: [
+                "Virtual Private Network", 
+                "Very Private Network", 
+                "Virtual Personal Network", 
+                "Virtual Public Network"
+            ],
+            correct: 0 
+        },
+        { 
+            question: "Which of the following is an example of a symmetric encryption algorithm?",
+            answers: [
+                "RSA", 
+                "AES", 
+                "Diffie-Hellman", 
+                "SHA-256"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "What is a firewall?",
+            answers: [
+                "A security protocol", 
+                "A hardware or software system that filters network traffic", 
+                "An encryption technique", 
+                "A data storage device"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "Which cryptographic algorithm is commonly used for secure communication over the internet?",
+            answers: [
+                "MD5", 
+                "SHA-1", 
+                "RSA", 
+                "TLS"
+            ],
+            correct: 3 
+        },
+        { 
+            question: "What is a keylogger?",
+            answers: [
+                "A device used to track physical keys pressed on a keyboard", 
+                "A software program that records keystrokes", 
+                "A cryptographic key used for encryption", 
+                "A hardware device for secure authentication"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "What does SSL/TLS stand for?",
+            answers: [
+                "Secure Socket Layer/Transport Layer Security", 
+                "Super Secure Link/Transmission Link System", 
+                "Safe Software Layer/Trust Layer Security", 
+                "None of the above"
+            ],
+            correct: 0 
+        },
+        { 
+            question: "What is the purpose of two-factor authentication (2FA)?",
+            answers: [
+                "To use two different encryption algorithms simultaneously", 
+                "To provide an extra layer of security by requiring two forms of authentication", 
+                "To generate two different keys for symmetric encryption", 
+                "To encrypt data using two different encryption protocols"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "What is the role of a penetration tester (pen tester) in cybersecurity?",
+            answers: [
+                "To develop new cryptographic algorithms", 
+                "To test and identify security vulnerabilities in systems", 
+                "To create secure network architectures", 
+                "To manage digital certificates"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "What is a DDoS attack?",
+            answers: [
+                "A Distributed Development of Software", 
+                "A Distributed Database System", 
+                "A Distributed Denial of Service attack that floods a system with excessive requests", 
+                "A Double-Data Storage system"
+            ],
+            correct: 2 
+        },
+        { 
+            question: "Which of the following is an example of a strong password?",
+            answers: [
+                "123456", 
+                "password", 
+                "P@ssw0rd!", 
+                "aBcD1234"
+            ],
+            correct: 3 
+        },
+        { 
+            question: "What is the purpose of encryption?",
+            answers: [
+                "To compress data for efficient storage", 
+                "To convert data into a secret code to secure it", 
+                "To authenticate users", 
+                "To filter network traffic"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "Which type of attack involves an attacker intercepting and altering communication between two parties?",
+            answers: [
+                "Phishing attack", 
+                "Man-in-the-Middle (MitM) attack", 
+                "SQL injection attack", 
+                "Brute-force attack"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "What is ransomware?",
+            answers: [
+                "A type of encryption used to secure data", 
+                "A software that demands payment to unlock encrypted data", 
+                "A secure messaging protocol", 
+                "A cryptographic algorithm"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "Which cryptographic hash function is considered secure for storing passwords?",
+            answers: [
+                "MD5", 
+                "SHA-1", 
+                "SHA-256", 
+                "RSA"
+            ],
+            correct: 2 
+        },
+        { 
+            question: "What is the primary goal of cybersecurity?",
+            answers: [
+                "To secure physical assets such as buildings", 
+                "To protect computer systems and networks from attacks", 
+                "To optimize network speed", 
+                "To develop new programming languages"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "What is the purpose of a digital certificate?",
+            answers: [
+                "To compress data for storage", 
+                "To authenticate the identity of a website or server", 
+                "To filter spam emails", 
+                "To manage database queries"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "What is the difference between symmetric and asymmetric encryption?",
+            answers: [
+                "Symmetric encryption uses the same key for both encryption and decryption, while asymmetric encryption uses different keys", 
+                "Symmetric encryption is faster than asymmetric encryption", 
+                "Asymmetric encryption is only used for secure communication", 
+                "None of the above"
+            ],
+            correct: 0 
+        },
+        { 
+            question: "Which of the following is an example of a social engineering attack?",
+            answers: [
+                "Phishing", 
+                "Malware", 
+                "DDoS", 
+                "DNS Spoofing"
+            ],
+            correct: 0 
+        },
+        { 
+            question: "What is a VPN used for?",
+            answers: [
+                "To store large amounts of data", 
+                "To securely connect to a private network over the internet", 
+                "To compress images", 
+                "To develop new software applications"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "What is the purpose of access control in cybersecurity?",
+            answers: [
+                "To monitor network traffic", 
+                "To regulate physical access to buildings", 
+                "To manage user permissions and restrict unauthorized access", 
+                "To encrypt data"
+            ],
+            correct: 2 
+        },
+        { 
+            question: "What is a zero-day exploit?",
+            answers: [
+                "An attack that targets systems with no antivirus software", 
+                "An attack that takes zero days to execute", 
+                "An attack that exploits a previously unknown vulnerability", 
+                "An attack that deletes all data"
+            ],
+            correct: 2 
+        },
+        { 
+            question: "Which of the following is a secure method of authentication?",
+            answers: [
+                "Using a single-factor authentication", 
+                "Using biometric data (e.g., fingerprint or face recognition)", 
+                "Sharing passwords via email", 
+                "Using simple passwords"
+            ],
+            correct: 1 
+        }
+    ],
+
+    cloud_computing: [
+        { 
+            question: "What is cloud computing?",
+            answers: [
+                "Storing data on physical servers only", 
+                "Accessing and storing data and programs over the internet instead of on your computer's hard drive", 
+                "A method of printing documents wirelessly", 
+                "None of the above"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "Which of the following is NOT a cloud service model?",
+            answers: [
+                "Infrastructure as a Service (IaaS)", 
+                "Platform as a Service (PaaS)", 
+                "Database as a Service (DBaaS)", 
+                "Software as a Service (SaaS)"
+            ],
+            correct: 2 
+        },
+        { 
+            question: "What does SaaS stand for?",
+            answers: [
+                "Software as a Service", 
+                "Storage as a Service", 
+                "System as a Service", 
+                "Security as a Service"
+            ],
+            correct: 0 
+        },
+        { 
+            question: "Which cloud deployment model provides dedicated infrastructure for a single organization?",
+            answers: [
+                "Public cloud", 
+                "Private cloud", 
+                "Hybrid cloud", 
+                "Community cloud"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "What is elasticity in cloud computing?",
+            answers: [
+                "The ability to manually adjust server configurations", 
+                "The ability to automatically scale resources up or down based on demand", 
+                "The ability to synchronize data across multiple servers", 
+                "The ability to securely encrypt data"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "Which cloud provider offers services such as EC2 and S3?",
+            answers: [
+                "Google Cloud Platform", 
+                "Microsoft Azure", 
+                "IBM Cloud", 
+                "Amazon Web Services (AWS)"
+            ],
+            correct: 3 
+        },
+        { 
+            question: "What is a virtual machine (VM) in cloud computing?",
+            answers: [
+                "A physical server in a data center", 
+                "An instance of a computer system that runs on virtualized hardware", 
+                "A type of cloud storage", 
+                "A programming language used for cloud applications"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "Which of the following is an example of cloud-based productivity software?",
+            answers: [
+                "Microsoft Office (installed on your local computer)", 
+                "Google Workspace (accessed via a web browser)", 
+                "Adobe Photoshop (installed on your local computer)", 
+                "Autodesk AutoCAD (installed on your local computer)"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "What is a container in cloud computing?",
+            answers: [
+                "A physical storage device", 
+                "A lightweight, portable package that includes everything needed to run a piece of software", 
+                "A type of virtual machine", 
+                "A networking protocol"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "Which of the following is a benefit of cloud computing?",
+            answers: [
+                "Increased physical security of data", 
+                "Limited scalability", 
+                "Reduced upfront costs and maintenance efforts", 
+                "Decreased network accessibility"
+            ],
+            correct: 2 
+        },
+        { 
+            question: "What is multi-tenancy in cloud computing?",
+            answers: [
+                "A cloud deployment model with multiple public clouds", 
+                "A cloud architecture that supports multiple programming languages", 
+                "A cloud environment where multiple users share resources on the same infrastructure", 
+                "A type of cloud storage for multiple users"
+            ],
+            correct: 2 
+        },
+        { 
+            question: "What is the purpose of load balancing in cloud computing?",
+            answers: [
+                "To secure data during transmission", 
+                "To evenly distribute network traffic across multiple servers", 
+                "To encrypt data at rest", 
+                "To manage user authentication"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "Which cloud service model provides virtualized computing resources over the internet?",
+            answers: [
+                "Software as a Service (SaaS)", 
+                "Platform as a Service (PaaS)", 
+                "Infrastructure as a Service (IaaS)", 
+                "Network as a Service (NaaS)"
+            ],
+            correct: 2 
+        },
+        { 
+            question: "What is serverless computing?",
+            answers: [
+                "A cloud deployment model with dedicated physical servers", 
+                "A cloud architecture that uses physical servers", 
+                "A cloud computing model where the cloud provider manages the infrastructure and users only pay for actual usage", 
+                "A type of virtual machine"
+            ],
+            correct: 2 
+        },
+        { 
+            question: "Which cloud computing characteristic allows resources to be automatically provisioned and released?",
+            answers: [
+                "On-demand self-service", 
+                "Resource pooling", 
+                "Measured service", 
+                "Rapid elasticity"
+            ],
+            correct: 3 
+        },
+        { 
+            question: "What is the purpose of a CDN (Content Delivery Network) in cloud computing?",
+            answers: [
+                "To encrypt data in transit", 
+                "To distribute content to users more efficiently by caching it closer to them", 
+                "To manage cloud databases", 
+                "To automatically deploy applications"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "Which cloud computing deployment model is a combination of public and private clouds?",
+            answers: [
+                "Public cloud", 
+                "Private cloud", 
+                "Hybrid cloud", 
+                "Community cloud"
+            ],
+            correct: 2 
+        },
+        { 
+            question: "What is the purpose of IAM (Identity and Access Management) in cloud computing?",
+            answers: [
+                "To manage physical servers", 
+                "To control and secure access to cloud resources", 
+                "To optimize network performance", 
+                "To encrypt data at rest"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "Which cloud computing service model provides a complete development and deployment environment in the cloud?",
+            answers: [
+                "Infrastructure as a Service (IaaS)", 
+                "Platform as a Service (PaaS)", 
+                "Software as a Service (SaaS)", 
+                "Function as a Service (FaaS)"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "What is geographic redundancy in cloud computing?",
+            answers: [
+                "A strategy to reduce network latency by using multiple CDNs", 
+                "A method of mirroring data and resources across multiple geographic locations", 
+                "A cloud deployment model with dedicated servers", 
+                "A networking protocol for secure communication"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "Which cloud computing service model provides access to virtualized networking infrastructure?",
+            answers: [
+                "Network as a Service (NaaS)", 
+                "Platform as a Service (PaaS)", 
+                "Infrastructure as a Service (IaaS)", 
+                "Software as a Service (SaaS)"
+            ],
+            correct: 0 
+        },
+        { 
+            question: "What is a data lake in cloud computing?",
+            answers: [
+                "A large body of water used to cool data centers", 
+                "A storage repository that holds a vast amount of raw data in its native format", 
+                "A secure tunnel for data transmission", 
+                "A type of cloud storage"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "Which cloud computing service model provides ready-to-use applications over the internet?",
+            answers: [
+                "Infrastructure as a Service (IaaS)", 
+                "Platform as a Service (PaaS)", 
+                "Software as a Service (SaaS)", 
+                "Function as a Service (FaaS)"
+            ],
+            correct: 2 
+        },
+        { 
+            question: "What is the purpose of fault tolerance in cloud computing?",
+            answers: [
+                "To prevent unauthorized access to cloud resources", 
+                "To recover from failures and maintain system availability", 
+                "To optimize network performance", 
+                "To manage cloud databases"
+            ],
+            correct: 1 
+        }
+    ],
+
+    iot: [
+    { 
+        question: "What does IoT stand for?",
+        answers: [
+            "Internet of Technology", 
+            "Internet of Things", 
+            "Internet of Telecommunication", 
+            "Internet of Transactions"
+        ],
+        correct: 1 
+    },
+    { 
+        question: "Which of the following is NOT a typical component of an IoT system?",
+        answers: [
+            "Sensors", 
+            "Cloud Computing", 
+            "Blockchain", 
+            "Actuators"
+        ],
+        correct: 2 
+    },
+    { 
+        question: "Which wireless technology is commonly used for short-range communication in IoT devices?",
+        answers: [
+            "3G", 
+            "Wi-Fi", 
+            "Bluetooth", 
+            "LTE"
+        ],
+        correct: 2 
+    },
+    { 
+        question: "What is MQTT (Message Queuing Telemetry Transport) used for in IoT?",
+        answers: [
+            "To secure IoT devices from cyber attacks", 
+            "To transfer data between IoT devices using a lightweight protocol", 
+            "To power IoT devices remotely", 
+            "To store data in IoT databases"
+        ],
+        correct: 1 
+    },
+    { 
+        question: "What is a microcontroller?",
+        answers: [
+            "A small computer with limited processing power, memory, and input/output peripherals", 
+            "A cloud computing platform for IoT applications", 
+            "A type of IoT sensor", 
+            "A networking protocol used in IoT"
+        ],
+        correct: 0 
+    },
+    { 
+        question: "What is the purpose of edge computing in IoT?",
+        answers: [
+            "To perform data processing and analysis closer to the data source, reducing latency and bandwidth usage", 
+            "To connect IoT devices to the internet", 
+            "To store large amounts of data generated by IoT devices", 
+            "To secure IoT networks"
+        ],
+        correct: 0 
+    },
+    { 
+        question: "Which of the following is an example of a smart home IoT application?",
+        answers: [
+            "Online shopping", 
+            "Remote-controlled lighting system", 
+            "Social media networking", 
+            "Online gaming"
+        ],
+        correct: 1 
+    },
+    { 
+        question: "What is RFID (Radio Frequency Identification) used for in IoT?",
+        answers: [
+            "To transfer data over a cellular network", 
+            "To provide wireless internet access to IoT devices", 
+            "To identify and track objects using radio waves", 
+            "To encrypt data transmitted by IoT devices"
+        ],
+        correct: 2 
+    },
+    { 
+        question: "What is a smart city?",
+        answers: [
+            "A city with advanced telecommunications infrastructure", 
+            "A city that uses IoT technologies to improve efficiency and quality of life for its residents", 
+            "A city with a large number of smartphone users", 
+            "A city that has banned the use of IoT devices"
+        ],
+        correct: 1 
+    },
+    { 
+        question: "What is LoRaWAN used for in IoT?",
+        answers: [
+            "To store data in IoT databases", 
+            "To connect IoT devices to the internet using long-range, low-power wireless communication", 
+            "To power IoT devices remotely", 
+            "To secure IoT networks"
+        ],
+        correct: 1 
+    },
+    { 
+        question: "What is the purpose of a gateway in IoT?",
+        answers: [
+            "To control actuators in IoT devices", 
+            "To connect IoT devices to the cloud", 
+            "To provide security to IoT networks", 
+            "To measure temperature and humidity"
+        ],
+        correct: 1 
+    },
+    { 
+        question: "What is the main challenge associated with IoT security?",
+        answers: [
+            "Limited availability of IoT devices", 
+            "Lack of standardization in IoT protocols", 
+            "High cost of IoT devices", 
+            "Overabundance of IoT data"
+        ],
+        correct: 1 
+    },
+    { 
+        question: "What is a wearable IoT device?",
+        answers: [
+            "An IoT device that can be worn on the body, such as a smartwatch or fitness tracker", 
+            "An IoT device that controls home appliances remotely", 
+            "An IoT device that generates renewable energy", 
+            "An IoT device that uses AI for data analysis"
+        ],
+        correct: 0 
+    },
+    { 
+        question: "Which of the following is a security concern in IoT?",
+        answers: [
+            "Overheating of IoT devices", 
+            "Lack of user-friendly interfaces", 
+            "Unauthorized access to IoT devices and data", 
+            "Excessive battery consumption"
+        ],
+        correct: 2 
+    },
+    { 
+        question: "What is Zigbee used for in IoT?",
+        answers: [
+            "To store data in IoT databases", 
+            "To provide wireless internet access to IoT devices", 
+            "To connect low-power IoT devices over short distances", 
+            "To encrypt data transmitted by IoT devices"
+        ],
+        correct: 2 
+    },
+    { 
+        question: "What is the role of machine learning in IoT?",
+        answers: [
+            "To design IoT hardware components", 
+            "To analyze data collected from IoT devices and make predictions", 
+            "To secure IoT networks from cyber attacks", 
+            "To manufacture IoT sensors"
+        ],
+        correct: 1 
+    },
+    { 
+        question: "Which of the following is an example of an industrial IoT (IIoT) application?",
+        answers: [
+            "Online gaming", 
+            "Smart agriculture", 
+            "Social media networking", 
+            "Online shopping"
+        ],
+        correct: 1 
+    },
+    { 
+        question: "What is a beacon in IoT?",
+        answers: [
+            "A device that emits signals to communicate with nearby IoT devices", 
+            "A type of IoT sensor", 
+            "A cloud-based IoT platform", 
+            "A security protocol used in IoT networks"
+        ],
+        correct: 0 
+    },
+    { 
+        question: "What is the purpose of environmental monitoring in IoT?",
+        answers: [
+            "To control home appliances remotely", 
+            "To measure and analyze environmental conditions using IoT sensors", 
+            "To connect IoT devices to the cloud", 
+            "To provide wireless internet access to IoT devices"
+        ],
+        correct: 1 
+    },
+    { 
+        question: "Which IoT communication protocol is commonly used for low-power, short-range wireless communication?",
+        answers: [
+            "3G", 
+            "Wi-Fi", 
+            "Bluetooth Low Energy (BLE)", 
+            "LTE-M"
+        ],
+        correct: 2 
+    },
+    { 
+        question: "What is the purpose of fog computing in IoT?",
+        answers: [
+            "To perform data processing and analysis in the cloud", 
+            "To perform data processing and analysis at the network edge, closer to IoT devices", 
+            "To store large amounts of IoT data", 
+            "To monitor network traffic"
+        ],
+        correct: 1 
+    },
+    { 
+        question: "Which IoT device is used to measure temperature and humidity?",
+        answers: [
+            "Actuator", 
+            "Sensor", 
+            "Gateway", 
+            "Microcontroller"
+        ],
+        correct: 1 
+    },
+    { 
+        question: "What is the purpose of IoT analytics?",
+        answers: [
+            "To manufacture IoT devices", 
+            "To secure IoT networks", 
+            "To analyze and derive insights from IoT data", 
+            "To connect IoT devices to the internet"
+        ],
+        correct: 2 
+    },
+    { 
+        question: "Which of the following is an example of an IoT application in healthcare?",
+        answers: [
+            "Online shopping", 
+            "Remote-controlled lighting system", 
+            "Telemedicine and remote patient monitoring", 
+            "Online gaming"
+        ],
+        correct: 2 
+    }
+],
+
+big_data: [
+        { 
+            question: "What is Big Data?",
+            answers: [
+                "Data that is too large to be processed using traditional methods", 
+                "Data that is stored on large servers", 
+                "Data that is encrypted for security", 
+                "Data that is organized into relational databases"
+            ],
+            correct: 0 
+        },
+        { 
+            question: "Which technology is commonly used to process and analyze large volumes of structured and unstructured data?",
+            answers: [
+                "SQL (Structured Query Language)", 
+                "NoSQL (Not only SQL)", 
+                "XML (eXtensible Markup Language)", 
+                "HTML (HyperText Markup Language)"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "What is Hadoop?",
+            answers: [
+                "A programming language for data analysis", 
+                "A distributed processing framework for big data", 
+                "A database management system", 
+                "A data visualization tool"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "What is the primary goal of data preprocessing in big data analytics?",
+            answers: [
+                "To increase data storage capacity", 
+                "To prepare raw data for analysis by cleaning, transforming, and integrating it", 
+                "To compress data for efficient storage", 
+                "To secure data from unauthorized access"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "Which of the following is NOT a characteristic of Big Data?",
+            answers: [
+                "Volume", 
+                "Variety", 
+                "Veracity", 
+                "Velocity"
+            ],
+            correct: 3 
+        },
+        { 
+            question: "What is MapReduce?",
+            answers: [
+                "A database query language", 
+                "A data visualization technique", 
+                "A programming model for processing large data sets with a parallel, distributed algorithm", 
+                "A data compression algorithm"
+            ],
+            correct: 2 
+        },
+        { 
+            question: "What is the role of a data scientist?",
+            answers: [
+                "To develop hardware components for data storage", 
+                "To manage database queries", 
+                "To analyze and interpret complex data sets to inform business decisions", 
+                "To build networking protocols"
+            ],
+            correct: 2 
+        },
+        { 
+            question: "Which of the following is a commonly used data visualization tool?",
+            answers: [
+                "Hadoop", 
+                "Tableau", 
+                "MongoDB", 
+                "Splunk"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "What is predictive analytics?",
+            answers: [
+                "Analyzing historical data to understand past trends", 
+                "Analyzing real-time data to detect anomalies", 
+                "Using data to forecast future trends and behaviors", 
+                "Analyzing data from social media"
+            ],
+            correct: 2 
+        },
+        { 
+            question: "Which technology is used to store and manage large volumes of structured data?",
+            answers: [
+                "Hadoop", 
+                "NoSQL databases", 
+                "Data warehouses", 
+                "Apache Spark"
+            ],
+            correct: 2 
+        },
+        { 
+            question: "What is the purpose of data mining?",
+            answers: [
+                "To store and retrieve data efficiently", 
+                "To extract patterns and insights from large data sets", 
+                "To compress data for storage", 
+                "To secure data from unauthorized access"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "What is Apache Spark?",
+            answers: [
+                "A data compression algorithm", 
+                "A distributed computing framework for processing big data", 
+                "A data visualization tool", 
+                "A programming language for data analysis"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "Which of the following is NOT a big data processing technique?",
+            answers: [
+                "Data Sampling", 
+                "Data Replication", 
+                "Data Partitioning", 
+                "Data Aggregation"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "What is the role of ETL (Extract, Transform, Load) in big data analytics?",
+            answers: [
+                "To secure data from cyber attacks", 
+                "To analyze data using machine learning algorithms", 
+                "To prepare raw data for analysis by cleaning, transforming, and loading it into a data warehouse", 
+                "To develop networking protocols"
+            ],
+            correct: 2 
+        },
+        { 
+            question: "Which of the following is a challenge in big data analytics?",
+            answers: [
+                "Limited data storage options", 
+                "Scalability and performance issues", 
+                "Low data variety", 
+                "Simple data processing techniques"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "What is the role of data governance in big data management?",
+            answers: [
+                "To manage data storage hardware", 
+                "To ensure data quality, security, and compliance with regulations", 
+                "To compress data for efficient storage", 
+                "To perform real-time data analysis"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "Which technology is used to analyze and interpret natural language text data?",
+            answers: [
+                "Data mining", 
+                "Predictive analytics", 
+                "Natural Language Processing (NLP)", 
+                "Data warehousing"
+            ],
+            correct: 2 
+        },
+        { 
+            question: "What is the purpose of data anonymization in big data analytics?",
+            answers: [
+                "To increase data storage capacity", 
+                "To reduce data latency", 
+                "To protect individuals' privacy by removing or obfuscating personally identifiable information (PII)", 
+                "To compress data for efficient storage"
+            ],
+            correct: 2 
+        },
+        { 
+            question: "Which technology is used to analyze streaming data in real-time?",
+            answers: [
+                "Batch processing", 
+                "Apache HBase", 
+                "Apache Kafka", 
+                "Data warehousing"
+            ],
+            correct: 2 
+        },
+        { 
+            question: "What is the purpose of data replication in big data systems?",
+            answers: [
+                "To reduce data latency", 
+                "To perform real-time data analysis", 
+                "To compress data for storage", 
+                "To store data securely"
+            ],
+            correct: 0 
+        },
+        { 
+            question: "What is a data warehouse?",
+            answers: [
+                "A distributed computing framework", 
+                "A database optimized for storage and analysis of structured data", 
+                "A data visualization tool", 
+                "A data compression algorithm"
+            ],
+            correct: 1 
+        },
+        { 
+            question: "What is data sovereignty?",
+            answers: [
+                "The right of individuals to control their personal data", 
+                "The process of data storage and management", 
+                "The legal concept that data is subject to the laws of the country in which it is located", 
+                "The process of data replication"
+            ],
+            correct: 2 
+        },
+        { 
+            question: "Which of the following is a common use case for big data analytics in business?",
+            answers: [
+                "Social media networking", 
+                "Real-time gaming", 
+                "Customer segmentation and targeted marketing", 
+                "Online shopping"
+            ],
+            correct: 2 
+        },
+        { 
+            question: "What is the role of data lakes in big data management?",
+            answers: [
+                "To compress data for efficient storage", 
+                "To integrate data from different sources in its original format for future analysis", 
+                "To perform real-time data analysis", 
+                "To manage data replication"
+            ],
+            correct: 1 
+        }
+    ],
+
+    software_eng: [
+        {
+            question: "What is the purpose of version control systems like Git?",
+            answers: [
+                "To manage and track changes to software code over time",
+                "To compile and execute software programs",
+                "To design user interfaces",
+                "To manage database queries"
+            ],
+            correct: 0
+        },
+        {
+            question: "Which software development methodology emphasizes iterative development and collaboration between cross-functional teams?",
+            answers: [
+                "Waterfall",
+                "Agile",
+                "Scrum",
+                "Lean"
+            ],
+            correct: 1
+        },
+        {
+            question: "What is the role of a software architect?",
+            answers: [
+                "To write code and fix bugs",
+                "To manage project timelines and budgets",
+                "To design and oversee the overall structure of a software system",
+                "To conduct user acceptance testing"
+            ],
+            correct: 2
+        },
+        {
+            question: "Which programming language is commonly used for web development and server-side scripting?",
+            answers: [
+                "Java",
+                "C++",
+                "Python",
+                "JavaScript"
+            ],
+            correct: 3
+        },
+        {
+            question: "What does the term 'API' stand for in software development?",
+            answers: [
+                "Automated Programming Interface",
+                "Advanced Programming Interface",
+                "Application Program Interface",
+                "Automated Program Interaction"
+            ],
+            correct: 2
+        },
+        {
+            question: "Which software testing technique involves testing individual units or components of a software system?",
+            answers: [
+                "Integration testing",
+                "System testing",
+                "Acceptance testing",
+                "Unit testing"
+            ],
+            correct: 3
+        },
+        {
+            question: "What is the purpose of continuous integration (CI) in software development?",
+            answers: [
+                "To automate the deployment of software applications",
+                "To continuously test and integrate code changes into a shared repository",
+                "To manage customer relationships",
+                "To analyze user behavior"
+            ],
+            correct: 1
+        },
+        {
+            question: "Which development practice aims to automate the process of software deployment and infrastructure management?",
+            answers: [
+                "Continuous deployment",
+                "Infrastructure as Code (IaC)",
+                "DevOps",
+                "Kanban"
+            ],
+            correct: 1
+        },
+        {
+            question: "What is the purpose of code refactoring?",
+            answers: [
+                "To add new features to software applications",
+                "To optimize existing code for improved performance or readability",
+                "To manage database migrations",
+                "To design user interfaces"
+            ],
+            correct: 1
+        },
+        {
+            question: "Which software design pattern promotes the separation of concerns by dividing an application into three interconnected parts?",
+            answers: [
+                "Model-View-Controller (MVC)",
+                "Observer",
+                "Singleton",
+                "Factory Method"
+            ],
+            correct: 0
+        },
+        {
+            question: "What is the primary goal of software requirements engineering?",
+            answers: [
+                "To manage project budgets",
+                "To document user stories",
+                "To elicit, analyze, and document software requirements",
+                "To conduct user acceptance testing"
+            ],
+            correct: 2
+        },
+        {
+            question: "Which phase of the software development life cycle (SDLC) involves gathering and analyzing information from stakeholders to define the scope and requirements of a software project?",
+            answers: [
+                "Testing",
+                "Deployment",
+                "Design",
+                "Requirement Analysis"
+            ],
+            correct: 3
+        },
+        {
+            question: "What is the purpose of version control branching strategies like GitFlow?",
+            answers: [
+                "To remove bugs from software code",
+                "To manage parallel development efforts and facilitate collaboration",
+                "To design user interfaces",
+                "To automate software deployments"
+            ],
+            correct: 1
+        },
+        {
+            question: "Which software development approach focuses on building small, reusable components that can be independently deployed and scaled?",
+            answers: [
+                "Microservices architecture",
+                "Monolithic architecture",
+                "Client-server architecture",
+                "Service-Oriented Architecture (SOA)"
+            ],
+            correct: 0
+        },
+        {
+            question: "Which software metric measures the complexity of software code based on the number of linearly independent paths through a program's source code?",
+            answers: [
+                "Cyclomatic complexity",
+                "Code coverage",
+                "Memory footprint",
+                "Execution time"
+            ],
+            correct: 0
+        },
+        {
+            question: "What is the purpose of a software design review?",
+            answers: [
+                "To conduct performance testing",
+                "To assess the quality and feasibility of a software design before implementation",
+                "To document software requirements",
+                "To automate software deployments"
+            ],
+            correct: 1
+        },
+        {
+            question: "Which software development approach emphasizes rapid iteration and customer feedback to improve product features and usability?",
+            answers: [
+                "Waterfall",
+                "Agile",
+                "Scrum",
+                "Kanban"
+            ],
+            correct: 1
+        },
+        {
+            question: "Which type of software testing involves evaluating the behavior of an entire system or application?",
+            answers: [
+                "Unit testing",
+                "Integration testing",
+                "System testing",
+                "Acceptance testing"
+            ],
+            correct: 2
+        },
+        {
+            question: "What is the role of a product owner in Scrum?",
+            answers: [
+                "To write code and fix bugs",
+                "To manage project timelines and budgets",
+                "To represent stakeholders and prioritize feature development",
+                "To conduct automated testing"
+            ],
+            correct: 2
+        },
+        {
+            question: "Which software development approach focuses on minimizing waste and optimizing efficiency by eliminating unnecessary activities?",
+            answers: [
+                "Lean development",
+                "Agile development",
+                "Scrum",
+                "Kanban"
+            ],
+            correct: 0
+        },
+        {
+            question: "What is the purpose of load testing in software performance testing?",
+            answers: [
+                "To assess the behavior of individual components or units",
+                "To evaluate system functionality with maximum operational load",
+                "To conduct acceptance testing with end users",
+                "To automate software deployments"
+            ],
+            correct: 1
+        },
+        {
+            question: "Which software development practice focuses on delivering frequent, incremental updates to software applications?",
+            answers: [
+                "Continuous integration",
+                "Continuous deployment",
+                "Continuous improvement",
+                "Continuous delivery"
+            ],
+            correct: 3
+        },
+        {
+            question: "What is the primary goal of user acceptance testing (UAT)?",
+            answers: [
+                "To assess the behavior of individual components or units",
+                "To evaluate system functionality with maximum operational load",
+                "To validate that the software meets business requirements and user needs",
+                "To automate software deployments"
+            ],
+            correct: 2
+        },
+        {
+            question: "Which software development practice involves breaking down work into small, manageable tasks and visualizing workflow on a Kanban board?",
+            answers: [
+                "Scrum",
+                "Continuous integration",
+                "Lean development",
+                "Kanban"
+            ],
+            correct: 3
+        },
+        {
+            question: "What is the purpose of static code analysis in software development?",
+            answers: [
+                "To evaluate system functionality with maximum operational load",
+                "To automate the deployment of software applications",
+                "To identify potential defects and improve code quality",
+                "To manage project timelines and budgets"
+            ],
+            correct: 2
+        },
+        {
+            question: "Which software development approach involves integrating development and operations teams to improve collaboration and automate software delivery?",
+            answers: [
+                "Waterfall",
+                "Agile",
+                "DevOps",
+                "Kanban"
+            ],
+            correct: 2
+        }
+    ],
+
+    computer_vision: [
+        {
+            question: "What is computer vision?",
+            answers: [
+                "A technology that allows computers to understand and interpret visual information from the world",
+                "A method for storing images in databases",
+                "A programming language used for visual recognition",
+                "A technique for compressing image data"
+            ],
+            correct: 0
+        },
+        {
+            question: "Which algorithm is commonly used for feature detection and description in computer vision?",
+            answers: [
+                "K-means clustering",
+                "Support Vector Machines (SVM)",
+                "SIFT (Scale-Invariant Feature Transform)",
+                "Random Forest"
+            ],
+            correct: 2
+        },
+        {
+            question: "What does CNN stand for in the context of deep learning and computer vision?",
+            answers: [
+                "Central Neural Network",
+                "Convex Neural Network",
+                "Convolutional Neural Network",
+                "Computerized Neural Network"
+            ],
+            correct: 2
+        },
+        {
+            question: "Which task in computer vision involves identifying the location and extent of objects in an image?",
+            answers: [
+                "Object segmentation",
+                "Image classification",
+                "Object detection",
+                "Feature extraction"
+            ],
+            correct: 2
+        },
+        {
+            question: "What is the purpose of image segmentation in computer vision?",
+            answers: [
+                "To identify and label objects within an image",
+                "To classify images into predefined categories",
+                "To generate synthetic images",
+                "To compress image data"
+            ],
+            correct: 0
+        },
+        {
+            question: "Which technique is used for aligning multiple images of the same scene to create a composite image with enhanced detail and resolution?",
+            answers: [
+                "Image registration",
+                "Image denoising",
+                "Image augmentation",
+                "Image filtering"
+            ],
+            correct: 0
+        },
+        {
+            question: "What is optical flow in computer vision?",
+            answers: [
+                "A technique for image segmentation",
+                "The pattern of apparent motion of objects in an image",
+                "A method for image compression",
+                "A type of image enhancement"
+            ],
+            correct: 1
+        },
+        {
+            question: "Which deep learning framework is commonly used for building and training neural networks for computer vision tasks?",
+            answers: [
+                "TensorFlow",
+                "PyTorch",
+                "Keras",
+                "All of the above"
+            ],
+            correct: 3
+        },
+        {
+            question: "What is the purpose of data augmentation in training computer vision models?",
+            answers: [
+                "To reduce overfitting and improve model generalization",
+                "To compress image data",
+                "To classify images into categories",
+                "To generate synthetic images"
+            ],
+            correct: 0
+        },
+        {
+            question: "Which technique is used for detecting and recognizing faces in images?",
+            answers: [
+                "Histogram equalization",
+                "Haar cascades",
+                "Principal Component Analysis (PCA)",
+                "Decision trees"
+            ],
+            correct: 1
+        },
+        {
+            question: "What is the primary goal of image classification in computer vision?",
+            answers: [
+                "To identify the location of objects in an image",
+                "To segment images into regions",
+                "To assign a label or category to an entire image",
+                "To remove noise from images"
+            ],
+            correct: 2
+        },
+        {
+            question: "Which method is used for generating a high-resolution image from multiple low-resolution images of the same scene?",
+            answers: [
+                "Image filtering",
+                "Image denoising",
+                "Super-resolution",
+                "Image stitching"
+            ],
+            correct: 2
+        },
+        {
+            question: "What is the purpose of depth estimation in computer vision?",
+            answers: [
+                "To identify objects in an image",
+                "To estimate the distance of objects from the camera",
+                "To classify images into categories",
+                "To generate synthetic images"
+            ],
+            correct: 1
+        },
+        {
+            question: "Which technique is used for recognizing handwritten characters and digits?",
+            answers: [
+                "Histogram equalization",
+                "Optical character recognition (OCR)",
+                "Blob detection",
+                "Image segmentation"
+            ],
+            correct: 1
+        },
+        {
+            question: "What is the goal of instance segmentation in computer vision?",
+            answers: [
+                "To identify and classify objects within an image",
+                "To separate different instances of the same object",
+                "To estimate the depth of objects",
+                "To compress image data"
+            ],
+            correct: 1
+        },
+        {
+            question: "Which method is commonly used for detecting edges and boundaries in images?",
+            answers: [
+                "Gaussian blur",
+                "Canny edge detection",
+                "Mean shift clustering",
+                "Histogram equalization"
+            ],
+            correct: 1
+        },
+        {
+            question: "What is the purpose of non-maximum suppression in object detection?",
+            answers: [
+                "To reduce image noise",
+                "To remove redundant feature points",
+                "To select the most confident object detections and suppress overlapping detections",
+                "To generate synthetic images"
+            ],
+            correct: 2
+        },
+        {
+            question: "Which task in computer vision involves generating a textual description of the content of an image?",
+            answers: [
+                "Image classification",
+                "Object detection",
+                "Image captioning",
+                "Feature extraction"
+            ],
+            correct: 2
+        },
+        {
+            question: "Which technique is used for enhancing image contrast and improving visual quality?",
+            answers: [
+                "Histogram equalization",
+                "Principal Component Analysis (PCA)",
+                "Mean shift clustering",
+                "Gaussian blur"
+            ],
+            correct: 0
+        },
+        {
+            question: "What is the purpose of image denoising in computer vision?",
+            answers: [
+                "To reduce image noise and improve visual quality",
+                "To remove unwanted objects from images",
+                "To classify images into categories",
+                "To generate synthetic images"
+            ],
+            correct: 0
+        },
+        {
+            question: "Which deep learning architecture is specifically designed for image classification tasks?",
+            answers: [
+                "Recurrent Neural Network (RNN)",
+                "Long Short-Term Memory (LSTM)",
+                "Convolutional Neural Network (CNN)",
+                "Autoencoder"
+            ],
+            correct: 2
+        },
+        {
+            question: "What is the purpose of semantic segmentation in computer vision?",
+            answers: [
+                "To classify images into categories",
+                "To identify the location and extent of objects in an image",
+                "To assign a label to each pixel in an image",
+                "To generate synthetic images"
+            ],
+            correct: 2
+        },
+        {
+            question: "Which technique is used for matching keypoints and establishing correspondences between images?",
+            answers: [
+                "Image registration",
+                "Feature extraction",
+                "Optical flow",
+                "Blob detection"
+            ],
+            correct: 1
+        },
+        {
+            question: "What is the primary goal of face recognition in computer vision?",
+            answers: [
+                "To detect faces in images",
+                "To classify images into categories",
+                "To identify and verify individuals based on facial features",
+                "To remove noise from images"
+            ],
+            correct: 2
+        },
+        {
+            question: "Which method is commonly used for detecting and localizing objects in images with bounding boxes?",
+            answers: [
+                "Object segmentation",
+                "Object detection",
+                "Image classification",
+                "Feature extraction"
+            ],
+            correct: 1
+        }
+    ],
+
+    nlp: [
+        {
+            question: "What is Natural Language Processing (NLP)?",
+            answers: [
+                "A branch of computer science that focuses on understanding and processing human language by computers",
+                "A technique for compressing text data",
+                "A method for storing language data in databases",
+                "A programming language used for text analysis"
+            ],
+            correct: 0
+        },
+        {
+            question: "Which task in NLP involves determining the syntactic structure of sentences?",
+            answers: [
+                "Named Entity Recognition (NER)",
+                "Sentiment Analysis",
+                "Part-of-Speech (POS) tagging",
+                "Parsing"
+            ],
+            correct: 3
+        },
+        {
+            question: "What does POS tagging stand for in NLP?",
+            answers: [
+                "Part-of-Speech tagging",
+                "Primary Object Structure",
+                "Phrase-Oriented Syntax",
+                "Probability of Semantic"
+            ],
+            correct: 0
+        },
+        {
+            question: "Which deep learning architecture is commonly used for sequence modeling and language generation tasks?",
+            answers: [
+                "Recurrent Neural Network (RNN)",
+                "Convolutional Neural Network (CNN)",
+                "Long Short-Term Memory (LSTM)",
+                "Decision Tree"
+            ],
+            correct: 2
+        },
+        {
+            question: "What is the purpose of named entity recognition (NER) in NLP?",
+            answers: [
+                "To identify and classify named entities such as names, locations, and organizations in text",
+                "To translate text from one language to another",
+                "To generate summaries of text documents",
+                "To classify text into predefined categories"
+            ],
+            correct: 0
+        },
+        {
+            question: "Which technique is used for extracting meaningful information and relationships from unstructured text data?",
+            answers: [
+                "Topic modeling",
+                "Dimensionality reduction",
+                "Feature selection",
+                "Text mining"
+            ],
+            correct: 3
+        },
+        {
+            question: "What is the purpose of sentiment analysis in NLP?",
+            answers: [
+                "To identify the syntactic structure of sentences",
+                "To determine the sentiment or emotion expressed in text",
+                "To translate text between languages",
+                "To generate text summaries"
+            ],
+            correct: 1
+        },
+        {
+            question: "Which task in NLP involves generating human-like responses to text input?",
+            answers: [
+                "Machine translation",
+                "Named Entity Recognition (NER)",
+                "Text summarization",
+                "Chatbot interaction"
+            ],
+            correct: 3
+        },
+        {
+            question: "What is the goal of text summarization in NLP?",
+            answers: [
+                "To analyze the sentiment of text",
+                "To generate human-like responses",
+                "To extract key information and generate concise summaries from text documents",
+                "To classify text into categories"
+            ],
+            correct: 2
+        },
+        {
+            question: "Which technique is used for representing words as dense, continuous-valued vectors in NLP?",
+            answers: [
+                "Bag-of-Words (BoW)",
+                "Word Embeddings",
+                "TF-IDF (Term Frequency-Inverse Document Frequency)",
+                "Sequence-to-Sequence (Seq2Seq) modeling"
+            ],
+            correct: 1
+        },
+        {
+            question: "What is the purpose of machine translation in NLP?",
+            answers: [
+                "To summarize text documents",
+                "To identify named entities in text",
+                "To translate text from one language to another",
+                "To analyze the sentiment of text"
+            ],
+            correct: 2
+        },
+        {
+            question: "Which method is commonly used for determining the semantic similarity between words or phrases?",
+            answers: [
+                "Dependency parsing",
+                "Named Entity Recognition (NER)",
+                "Word embeddings",
+                "Topic modeling"
+            ],
+            correct: 2
+        },
+        {
+            question: "What is the primary goal of topic modeling in NLP?",
+            answers: [
+                "To generate text summaries",
+                "To classify text into predefined categories",
+                "To analyze the sentiment of text",
+                "To discover latent topics or themes in a collection of text documents"
+            ],
+            correct: 3
+        },
+        {
+            question: "Which task in NLP involves predicting the next word in a sequence of text?",
+            answers: [
+                "Named Entity Recognition (NER)",
+                "Text summarization",
+                "Language modeling",
+                "Sentiment analysis"
+            ],
+            correct: 2
+        },
+        {
+            question: "What is the purpose of dependency parsing in NLP?",
+            answers: [
+                "To identify the syntactic structure of sentences",
+                "To generate human-like responses",
+                "To classify text into categories",
+                "To analyze the sentiment of text"
+            ],
+            correct: 0
+        },
+        {
+            question: "Which deep learning architecture is commonly used for machine translation and sequence-to-sequence tasks?",
+            answers: [
+                "Recurrent Neural Network (RNN)",
+                "Convolutional Neural Network (CNN)",
+                "Long Short-Term Memory (LSTM)",
+                "Bidirectional Encoder Representations from Transformers (BERT)"
+            ],
+            correct: 3
+        },
+        {
+            question: "What is the purpose of text classification in NLP?",
+            answers: [
+                "To identify named entities in text",
+                "To generate summaries of text documents",
+                "To translate text between languages",
+                "To assign predefined categories or labels to text"
+            ],
+            correct: 3
+        },
+        {
+            question: "Which technique is used for generating text output based on learned patterns and probabilities from training data?",
+            answers: [
+                "Bag-of-Words (BoW)",
+                "Language modeling",
+                "TF-IDF (Term Frequency-Inverse Document Frequency)",
+                "Dependency parsing"
+            ],
+            correct: 1
+        },
+        {
+            question: "What is the purpose of word sense disambiguation in NLP?",
+            answers: [
+                "To translate text between languages",
+                "To identify and disambiguate the meaning of words based on context",
+                "To summarize text documents",
+                "To classify text into categories"
+            ],
+            correct: 1
+        },
+        {
+            question: "Which method is commonly used for text generation and completion tasks?",
+            answers: [
+                "Sequence-to-Sequence (Seq2Seq) modeling",
+                "Named Entity Recognition (NER)",
+                "Text summarization",
+                "Word embeddings"
+            ],
+            correct: 0
+        },
+        {
+            question: "What is the primary goal of information extraction in NLP?",
+            answers: [
+                "To analyze the sentiment of text",
+                "To identify and extract specific information or entities from text",
+                "To generate human-like responses",
+                "To classify text into categories"
+            ],
+            correct: 1
+        },
+        {
+            question: "Which technique is used for identifying patterns and relationships in large collections of text data?",
+            answers: [
+                "Text mining",
+                "Dimensionality reduction",
+                "Feature extraction",
+                "Dependency parsing"
+            ],
+            correct: 0
+        },
+        {
+            question: "What is the purpose of document similarity analysis in NLP?",
+            answers: [
+                "To translate text between languages",
+                "To identify and classify named entities",
+                "To measure the similarity between documents based on their content",
+                "To generate text summaries"
+            ],
+            correct: 2
+        },
+        {
+            question: "Which task in NLP involves generating a sequence of words that describes the content of an image?",
+            answers: [
+                "Machine translation",
+                "Text summarization",
+                "Image captioning",
+                "Named Entity Recognition (NER)"
+            ],
+            correct: 2
+        },
+        {
+            question: "What is the purpose of language modeling in NLP?",
+            answers: [
+                "To identify named entities in text",
+                "To generate text output based on learned patterns and probabilities",
+                "To translate text between languages",
+                "To classify text into categories"
+            ],
+            correct: 1
+        }
+    ],
+
+    computer_graphics: [
+        {
+            question: "What is computer graphics?",
+            answers: [
+                "A branch of computer science that deals with generating and manipulating visual content on computers",
+                "A method for compressing image data",
+                "A type of computer hardware used for displaying images",
+                "A programming language used for graphical user interfaces"
+            ],
+            correct: 0
+        },
+        {
+            question: "Which technique is used for representing 3D objects using a collection of flat polygons?",
+            answers: [
+                "Rasterization",
+                "Ray tracing",
+                "Polygonal modeling",
+                "Parametric modeling"
+            ],
+            correct: 2
+        },
+        {
+            question: "What does GPU stand for in the context of computer graphics?",
+            answers: [
+                "Graphical Performance Unit",
+                "General Processing Unit",
+                "Graphics Processing Unit",
+                "Global Performance Utility"
+            ],
+            correct: 2
+        },
+        {
+            question: "Which rendering technique simulates the behavior of light rays to create realistic images?",
+            answers: [
+                "Rasterization",
+                "Ray tracing",
+                "Polygon rendering",
+                "Texture mapping"
+            ],
+            correct: 1
+        },
+        {
+            question: "What is the purpose of texture mapping in computer graphics?",
+            answers: [
+                "To simulate the behavior of light rays",
+                "To represent 3D objects using polygons",
+                "To apply surface details and patterns to 3D models",
+                "To compress image data"
+            ],
+            correct: 2
+        },
+        {
+            question: "Which type of projection is commonly used to represent 3D scenes on a 2D surface?",
+            answers: [
+                "Orthographic projection",
+                "Isometric projection",
+                "Axonometric projection",
+                "Perspective projection"
+            ],
+            correct: 3
+        },
+        {
+            question: "What is the purpose of anti-aliasing in computer graphics?",
+            answers: [
+                "To convert 2D images into 3D models",
+                "To remove jagged edges and smooth out rendered images",
+                "To apply texture mapping to 3D models",
+                "To compress image data"
+            ],
+            correct: 1
+        },
+        {
+            question: "Which technique is used for creating smooth animations by interpolating between keyframes?",
+            answers: [
+                "Rasterization",
+                "Ray tracing",
+                "Keyframe animation",
+                "Parametric modeling"
+            ],
+            correct: 2
+        },
+        {
+            question: "What is the purpose of shading in computer graphics?",
+            answers: [
+                "To represent 3D objects using polygons",
+                "To apply texture mapping to 3D models",
+                "To simulate the behavior of light and determine surface appearance",
+                "To compress image data"
+            ],
+            correct: 2
+        },
+        {
+            question: "Which technique is used for simulating realistic physics and motion in computer-generated scenes?",
+            answers: [
+                "Keyframe animation",
+                "Physics-based rendering",
+                "Polygonal modeling",
+                "Rasterization"
+            ],
+            correct: 1
+        },
+        {
+            question: "What is the purpose of wireframe modeling in computer graphics?",
+            answers: [
+                "To represent 3D objects using flat polygons",
+                "To create smooth animations by interpolating between keyframes",
+                "To visualize 3D objects as a collection of lines and points",
+                "To compress image data"
+            ],
+            correct: 2
+        },
+        {
+            question: "Which technique is used for creating realistic simulations of fluid behavior in computer graphics?",
+            answers: [
+                "Keyframe animation",
+                "Particle systems",
+                "Physics-based rendering",
+                "Parametric modeling"
+            ],
+            correct: 1
+        },
+        {
+            question: "What is the purpose of computer-aided design (CAD) software?",
+            answers: [
+                "To simulate fluid behavior in computer-generated scenes",
+                "To create digital models of physical objects for design and engineering",
+                "To apply texture mapping to 3D models",
+                "To compress image data"
+            ],
+            correct: 1
+        },
+        {
+            question: "Which rendering technique is optimized for real-time applications such as video games?",
+            answers: [
+                "Ray tracing",
+                "Rasterization",
+                "Global illumination",
+                "Path tracing"
+            ],
+            correct: 1
+        },
+        {
+            question: "What is the purpose of ambient occlusion in computer graphics?",
+            answers: [
+                "To simulate the behavior of light rays",
+                "To enhance depth perception and realism by shading areas that are close to other surfaces",
+                "To apply texture mapping to 3D models",
+                "To compress image data"
+            ],
+            correct: 1
+        },
+        {
+            question: "Which technique is used for animating characters and objects by defining physical properties and constraints?",
+            answers: [
+                "Keyframe animation",
+                "Physics-based animation",
+                "Particle systems",
+                "Ray tracing"
+            ],
+            correct: 1
+        },
+        {
+            question: "What is the purpose of occlusion culling in computer graphics?",
+            answers: [
+                "To remove hidden surfaces from rendered images",
+                "To simulate the behavior of light rays",
+                "To compress image data",
+                "To apply texture mapping to 3D models"
+            ],
+            correct: 0
+        },
+        {
+            question: "Which technique is used for creating realistic hair, fur, and grass in computer-generated scenes?",
+            answers: [
+                "Particle systems",
+                "Physics-based rendering",
+                "Rasterization",
+                "Texture mapping"
+            ],
+            correct: 0
+        },
+        {
+            question: "What is the purpose of depth buffering in computer graphics?",
+            answers: [
+                "To simulate the behavior of light rays",
+                "To remove hidden surfaces from rendered images",
+                "To apply texture mapping to 3D models",
+                "To compress image data"
+            ],
+            correct: 1
+        },
+        {
+            question: "Which technique is used for simulating realistic lighting effects such as shadows and reflections?",
+            answers: [
+                "Particle systems",
+                "Ray tracing",
+                "Global illumination",
+                "Rasterization"
+            ],
+            correct: 2
+        },
+        {
+            question: "What is the purpose of level of detail (LOD) techniques in computer graphics?",
+            answers: [
+                "To enhance depth perception and realism by shading areas that are close to other surfaces",
+                "To simulate fluid behavior in computer-generated scenes",
+                "To optimize rendering performance by adjusting detail based on distance from the camera",
+                "To compress image data"
+            ],
+            correct: 2
+        },
+        {
+            question: "Which technique is used for creating realistic reflections and refractions of light in computer-generated scenes?",
+            answers: [
+                "Ambient occlusion",
+                "Ray tracing",
+                "Rasterization",
+                "Texture mapping"
+            ],
+            correct: 1
+        },
+        {
+            question: "What is the purpose of photon mapping in computer graphics?",
+            answers: [
+                "To create realistic simulations of fluid behavior",
+                "To simulate global illumination and indirect lighting effects",
+                "To compress image data",
+                "To apply texture mapping to 3D models"
+            ],
+            correct: 1
+        },
+        {
+            question: "Which technique is used for creating soft, realistic shadows in computer-generated scenes?",
+            answers: [
+                "Depth buffering",
+                "Ray tracing",
+                "Rasterization",
+                "Ambient occlusion"
+            ],
+            correct: 3
+        },
+        {
+            question: "What is the purpose of compositing in computer graphics?",
+            answers: [
+                "To optimize rendering performance by adjusting detail based on distance from the camera",
+                "To combine multiple layers or elements to create a final image",
+                "To simulate realistic lighting effects",
+                "To apply texture mapping to 3D models"
+            ],
+            correct: 1
+        }
+    ]
+
+
+            // Define other topics similarly
+        };
+        
+        let currentTopic;
+        let questions = [];
+        let questionIndex = 0;
+        let score = 0;
+        let timer;
+        
+        function startQuiz() {
+            const topic = document.getElementById("topic").value;
+            const numQuestions = parseInt(document.getElementById("num-questions").value);
+            currentTopic = topic;
+            questions = generateRandomQuestions(topic, numQuestions);
+        
+            // Show quiz and hide setup
+            document.getElementById("quiz").style.display = "block";
+            document.getElementById("quiz").scrollIntoView();
+        
+            // Start timer
+            const durationInMinutes = parseInt(document.getElementById("duration").value);
+            const durationInSeconds = durationInMinutes * 60;
+            startTimer(durationInSeconds);
+        
+            showQuestion();
+        }
+        
+        function generateRandomQuestions(topic, numQuestions) {
+            const topicQuestions = quizData[topic];
+            const shuffledQuestions = topicQuestions.sort(() => Math.random() - 0.5);
+            return shuffledQuestions.slice(0, numQuestions);
+        }
+        
+        function startTimer(durationInSeconds) {
+            let timerDisplay = document.createElement("div");
+            timerDisplay.textContent = `Time Left: ${formatTime(durationInSeconds)}`;
+            document.getElementById("quiz").appendChild(timerDisplay);
+        
+            timer = setInterval(() => {
+                durationInSeconds--;
+                timerDisplay.textContent = `Time Left: ${formatTime(durationInSeconds)}`;
+                if (durationInSeconds <= 0) {
+                    clearInterval(timer);
+                    finishQuiz();
+                }
+            }, 1000);
+        }
+        
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs < 10 ? '0' + secs : secs}`;
+        }
+        
+        function showQuestion() {
+            const currentQuestion = questions[questionIndex];
+            document.getElementById("question").textContent = currentQuestion.question;
+        
+            const answerContainer = document.getElementById("answers");
+            answerContainer.innerHTML = "";
+        
+            currentQuestion.answers.forEach((answer, index) => {
+                const option = document.createElement("div");
+                option.textContent = answer;
+                option.onclick = () => checkAnswer(index);
+                answerContainer.appendChild(option);
+            });
+        }
+        
+        function checkAnswer(selectedIndex) {
+            const currentQuestion = questions[questionIndex];
+            if (selectedIndex === currentQuestion.correct) {
+                score++;
+            }
+            questionIndex++;
+        
+            if (questionIndex < questions.length) {
+                showQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+        
+        function finishQuiz() {
+            clearInterval(timer);
+            document.getElementById("quiz").style.display = "none";
+            document.getElementById("result").style.display = "block";
+            document.getElementById("score").textContent = `You scored ${score} out of ${questions.length}`;
+        
+            // Reset quiz state
+            questionIndex = 0;
+            score = 0;
+        }
+        
+        function nextQuestion() {
+            questionIndex++;
+            if (questionIndex < questions.length) {
+                showQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+        
+    </script>
+</body>
+</html>

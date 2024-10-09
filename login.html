@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>JavaScript Quiz</title>
+	<link rel="stylesheet" href="./css/style.css">
+	<!-- Code Highlighter CSS -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/themes/prism-tomorrow.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+body {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	background-color: #000;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+.jsq-container {
+	border-radius: 5px;
+	padding: 0 10px;
+	color: #000;
+	background-color: #fff;
+	background-image: linear-gradient(180deg, #e2e2e2 0%, #aeaeae 100%);
+	font-family: 'Open Sans', sans-serif;
+	width: 500px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.20);
+}
+
+.jsq_header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 15px;
+	border-bottom: solid 1px #c5c5c5;
+}
+
+.jsq_footer {
+	border-top: 1px solid #9b9b9b;
+	padding: 10px 0;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+/* info box */
+.jsq_info_head {
+	padding: 10px 5px;
+	font-size: 20px;
+	font-weight: bold;
+	border-bottom: solid 1px #aaaa;
+}
+
+.jsq_info_list {
+	padding: 20px;
+}
+
+.jsq_info_list > div {
+	font-size: 15px;
+	margin: 15px 0;
+	margin-top: 0;
+}
+
+.jsq_info_footer {
+	border-top: solid 1px #919191;
+	padding: 10px 10px;
+	text-align: right;
+}
+
+/* timer */
+.jsq_time_left {
+	display: flex;
+	align-items: center;
+}
+
+div#jsq_timer {
+	border-radius: 50%;
+	font-size: 13px;
+	width: 28px;
+	min-width: 28px;
+	color: #fff;
+	height: 28px;
+	display: flex;
+	background-color: #0064ff;
+	justify-content: center;
+	align-items: center;
+	margin-left: 10px;
+}
+
+/* show all answers list completed quiz*/
+div#jsq_all_answers {
+	margin: 30px 0;
+	text-align: left;
+}
+
+.jsq_fnsh_question {
+	font-weight: bold;
+	margin-bottom: 5px;
+	font-size: 16px;
+}
+
+.jsq_finish {
+	font-size: 20px;
+	font-weight: 500;
+}
+
+.jsq_finish_box {
+	padding: 20px;
+	text-align: center;
+}
+
+.jsq_answer_block {
+	padding: 10px 10px;
+	background-color: #ffffff66;
+	border-radius: 5px;
+	margin: 5px 0;
+}
+
+.jsq_fnsh_options {
+	margin: 10px 0;
+	margin-left: 20px;
+}
+
+.jsq_answer_block span {
+	font-size: 13px;
+	margin: 7px 0;
+	display: block;
+	color: #5b5b5b;
+}
+
+.jsq_fnsh_score {
+	font-size: 13px;
+	font-weight: bold;
+	color: #0064ff;
+}
+
+.jsq_q_status {
+	font-size: 13px;
+	color: #9a009d;
+	font-weight: bold;
+	display: inline-block;
+}
+
+/* options */
+div#jsq_options {
+	margin: 15px;
+	text-align: center;
+	perspective: 500px;
+}
+
+div#jsq_options label {
+	margin: 20px 0;
+	display: block;
+	border-radius: 5px;
+	font-size: 15px;
+	background-color: #e1ebff;
+	color: #000000;
+	cursor: pointer;
+	text-align: left;
+	display: flex;
+}
+
+div#jsq_options input[type=radio] {
+	display: none;
+}
+
+div#jsq_options label:not(.disabled):hover {
+	background-color: #cdddff;
+}
+
+div#jsq_options label.disabled {
+	pointer-events: none;
+}
+
+/* incorrect option*/
+div#jsq_options label.jsq-incorrect {
+	color: #ffffff;
+	background-color: #e94f4f;
+}
+
+/* correct option */
+div#jsq_options label.jsq-correct {
+	color: #ffffff;
+	background-color: #42b55e;
+}
+
+/* options ID ABCD */
+div#jsq_options label span:first-child {
+	border-right: solid 1px #ffffff70;
+	padding: 10px 10px;
+	display: flex;
+	align-items: center;
+	border-radius: 4px 0 0 4px;
+	font-weight: bold;
+}
+
+/* options text */
+div#jsq_options label span:last-child {
+	display: inline-block;
+	padding: 10px 10px;
+}
+
+/* question */
+h1#jsq_question {
+	font-size: 20px;
+	margin: 35px 5px;
+	line-height: 1.5;
+	text-align: center;
+	font-weight: 400;
+}
+
+/* code box  */
+div#jsq_code_box{
+	display: none;
+	margin: 15px;
+}
+div#jsq_code_box pre {
+	margin: 0;
+	padding: 0;
+	background: inherit;
+}
+
+div#jsq_code_box code {
+	line-height: 1.6em;
+	overflow: auto;
+	font-size: 14px;
+	-moz-tab-size: 4;
+	display: block;
+	tab-size: 4;
+	background-color: #2d2d2d;
+	padding: 10px;
+	border-radius: 5px;
+	color: #fff;
+	font-family: monospace;
+	max-height: 400px;
+}
+
+button#next_question, button#prev_question {
+	visibility: hidden;
+}
+
+button.jsq_btn {
+	color: #fff;
+	border-radius: 5px;
+	background: #007bff;
+	border: solid 1px #007bff;
+	font-size: 13px;
+	padding: 5px 15px;
+	cursor: pointer;
+}
+
+button.jsq_btn:hover {
+	background: #005abd;
+	border: solid 1px #005abd;
+}
+
+.jsq_score {
+	font-size: 25px;
+	font-weight: 500;
+	color: #102bdc;
+	margin-bottom: 40px;
+}
+
+.jsq_score b {
+	display: block;
+	margin: 8px;
+	color: #bf28b0;
+}
+
+div#jsq_total {
+	font-size: 13px;
+}
+
+/* animation incorrect option (shaking) */
+.jsq_shake {
+	animation-name: jsq_shake;
+	animation-duration: .8s;
+	animation-fill-mode: both;
+}
+
+@keyframes jsq_shake {
+	0%, 100% {
+		transform: translateX(0);
+	}
+
+	10%, 30%, 50%, 70%, 90% {
+		transform: translateX(-5px);
+	}
+
+	20%, 40%, 60%, 80% {
+		transform: translateX(5px);
+	}
+
+}
+
+/* options animation */
+@keyframes jsq_option_anm {
+	0% {
+		opacity: 0;
+		transform-origin: 0 100%;
+		transform: rotateX(-180deg);
+	}
+
+	100% {
+		opacity: 1;
+		transform-origin: 0 100%;
+		transform: rotateX(0deg);
+	}
+
+}
+
+.jsq_anm {
+	animation-duration: .5s;
+	animation-fill-mode: both;
+	animation-name: jsq_option_anm;
+	animation-delay: calc(0.1s * var(--jsq_at));
+}
+
+
+
+    </style>
+</head>
+
+<body>
+
+
+	<div class="jsq-container" id="jsq_box">
+		<div class="jsq_header" style="display:none;">
+			<div class="jsq_head_text">JavaScript Simple Quiz Application</div>
+			<div class="jsq_time_left">Time Left <div id="jsq_timer">30</div> </div>
+		</div>
+		<div class="jsq_body">
+
+			<div id="jsq_ifo_box">
+				<div class="jsq_info_head">Some Rules of this Quiz</div>
+				<div class="jsq_info_list">
+					<div>1. You only get 30 seconds for each question.</div>
+					<div>2. Once you have selected your option, it cannot be undone.</div>
+					<div>3. You can't select any option once time goes off.</div>
+					<div>4. You can not skip the quiz while playing.</div>
+					<div>5. You will get points based on your correct answers.</div>
+				</div>
+				<div class="jsq_info_footer">
+					<button class="jsq_btn" id="jsq_start">Start</button>
+				</div>
+			</div>
+
+			<div class="jsq_main_content" style="display: none;">
+				<h1 id="jsq_question"></h1>
+				<div id="jsq_code_box"><pre class="language-js"><code></code></pre></div>
+				<div id="jsq_options"></div>
+			</div>
+
+		</div>
+
+		<div class="jsq_footer" style="display: none;">
+			<button class="jsq_btn" id="prev_question">Previous</button>
+			<div id="jsq_total">1 of 5 Questions</div>
+			<button class="jsq_btn" id="next_question">Next</button>
+		</div>
+	</div>
+
+
+	<!-- Code Highlighter JS -->
+	<script src="https://cdn.jsdelivr.net/combine/npm/prismjs@1.28.0,npm/prismjs@1.28.0/components/prism-javascript.min.js"></script>
+	<script src="./js/questions.js"></script>
+	<script src="./js/script.js"></script>
+    <script>
+        /**
+* code generated by https://www.html-code-generator.com/javascript/quiz-generator
+* created 2024/05/08
+*/
+(() => {
+
+	// include question array object;
+	let questions = jsq_questions;
+
+	let question_index = 0;
+	let score = 0;
+	let time_left = 30;
+	let timer_fun = '';
+	let current_question_completed = false;
+
+	const next_button = document.getElementById("next_question");
+	const prev_button = document.getElementById("prev_question");
+	const start_button = document.getElementById("jsq_start");
+
+	const replaceHTMLtags = text => text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+	const stopTimer = () => {
+		clearInterval(timer_fun);
+		document.getElementById("jsq_timer").innerHTML = '0';
+	};
+
+	const startTimer = (time_value) => {
+		timer_fun = setInterval(() => {
+			if (time_value <= 0) {
+				stopTimer();
+				optionSelected();
+			}
+			document.getElementById("jsq_timer").innerHTML = time_value;
+			time_value -= 1;
+
+		}, 1000);
+	};
+
+	// get all options radio
+	const getAllOptions = () => document.querySelectorAll("input[name=jsq_option]");
+
+	// after selected option disable radio 
+	const disableOptions = () => {
+		let option_radios = getAllOptions();
+		option_radios.forEach(element => {
+			element.disabled = true;
+			element.nextElementSibling.classList.add("disabled");
+		});
+	};
+
+
+	// evaluate the user selected option answer
+	const optionSelected = () => {
+		let score_set = '0';
+		let status = 'time out';
+		let answer = questions[question_index].answer;
+		let options_radios = getAllOptions();
+		options_radios.forEach(element => {
+
+			// correct answer [color green]
+			if (element.value == answer) {
+				element.nextElementSibling.classList.add("jsq-correct");
+			}
+
+			// user selected incorrect answer [color red]. 
+			if (element.checked && element.value != answer) {
+				element.nextElementSibling.classList.add("jsq-incorrect", "jsq_shake");
+
+				// set user selected option. after preview all answers list
+				questions[question_index].user_selected = element.value;
+				score_set = 0;
+
+				status = 'incorrect answer';
+			}
+
+			// user selected answer correct
+			if (element.checked && element.value == answer) {
+				score++;
+				score_set = 1;
+
+				status = 'correct answer';
+			}
+
+		});
+		// set question answer status
+		questions[question_index].status = status;
+		// set score
+		questions[question_index].score = score_set;
+		// set current question completed
+		questions[question_index].completed = true;
+
+		current_question_completed = true;
+
+		disableOptions();
+		stopTimer();
+		next_button.style.visibility = 'visible';
+	};
+
+	// show next question and options
+	const showQuestion = () => {
+		let current_question = questions[question_index];
+		let options_div = '';
+		let options = current_question.options;
+		let id_number = 0;
+		let option_id = ['A', 'B', 'C', 'D'];
+
+		for (let key in options) {
+			options_div += '<div class="jsq_anm" style="--jsq_at:' + (id_number + 1) + '">' +
+				'<input type="radio" name="jsq_option" id="option_' + id_number + '" value="' + key + '">' +
+				'<label for="option_' + id_number + '"><span>' + option_id[id_number] + '</span><span>' + replaceHTMLtags(options[key]) + '</span></label>' +
+				'</div>';
+			id_number++;
+		}
+
+		document.getElementById("jsq_question").innerText = current_question.question;
+		document.getElementById("jsq_options").innerHTML = options_div;
+		document.getElementById("jsq_total").innerText = '' + (question_index + 1) + ' of  ' + questions.length + ' Questions';
+		showCodeBox(current_question);
+		let option_radios = getAllOptions();
+		option_radios.forEach(element => {
+			element.addEventListener("change", optionSelected);
+		});
+		startTimer(time_left);
+		current_question_completed = false;
+	};
+
+	// show all question answers
+	const showAllAnswers = () => {
+		let div = '';
+		for (let i = 0; i < questions.length; i++) {
+			let question_list = questions[i];
+			let options = question_list.options;
+			div += '<div class="jsq_answer_block">';
+			div += '<div class="jsq_fnsh_question">' + (i + 1) + ', ' + replaceHTMLtags(question_list.question) + '</div>';
+			div += '<div class="jsq_fnsh_options">';
+			for (let key in options) {
+
+				if (question_list.answer == key) {
+					div += '<span style="color: green;font-weight: bold;">' + replaceHTMLtags(options[key]) + '</span>';
+				} else if (question_list.user_selected == key) {
+					div += '<span style="color: red;font-weight: bold;">' + replaceHTMLtags(options[key]) + '</span>';
+				} else {
+					div += '<span>' + replaceHTMLtags(options[key]) + '</span>';
+				}
+			}
+			div += '</div>';
+			div += '<div class="jsq_q_status">status : ' + question_list.status + '</div>';
+			div += '<div class="jsq_fnsh_score">score : ' + question_list.score + '</div>';
+			div += '</div>';
+		}
+
+		document.getElementById("jsq_all_answers").innerHTML = div;
+		document.getElementById("all_answer_btn").remove();
+	};
+
+	// If there is coding in this question, it will appear in this code box. show hide box
+	const showCodeBox = (current_question) => {
+		let code_box = document.getElementById("jsq_code_box");
+		let pre_code = document.querySelector("#jsq_code_box code");
+
+		if (current_question.code == undefined) {
+			code_box.style.display = 'none';
+			pre_code.innerText = '';
+		}else{
+			code_box.style.display = 'block';
+			pre_code.innerText = current_question.code;
+		}
+		// highlight code 
+		pre_code.innerHTML = Prism.highlight(pre_code.innerText, Prism.languages.javascript, 'javascript');
+	};
+	// question completed show result
+	const completedQuiz = () => {
+		let div = '<div class="jsq_finish_box">';
+		div += '<div class="jsq_finish">You have completed the Quiz!</div>';
+		div += '<br>';
+		div += '<div class="jsq_score">Your score: <b>' + score + ' out of ' + questions.length + '</b> <b>' + Math.round((100 * score) / questions.length) + '%</b></div>';
+		div += ' <button class="jsq_btn" id="all_answer_btn">Check your answers</button>';
+		div += '<div id="jsq_all_answers"></div>';
+		div += '</div>';
+		document.getElementById("jsq_box").innerHTML = div;
+		const all_answer_btn = document.getElementById("all_answer_btn");
+		all_answer_btn.addEventListener("click", showAllAnswers);
+	};
+
+
+	// go next question
+	const nextQuestion = () => {
+		// if option not selected
+		if (!current_question_completed) {
+			return;
+		}
+
+		question_index++;
+		if (questions.length - 1 < question_index) {
+			stopTimer();
+			completedQuiz();
+			return;
+		}
+
+		next_button.style.visibility = 'hidden';
+
+		if (questions[question_index].completed) {
+			next_button.style.visibility = 'visible';
+		}
+
+		if (question_index > 0) {
+			prev_button.style.visibility = 'visible';
+		}
+
+		if (questions[question_index].completed) {
+			showPrevQuestion();
+		} else {
+			showQuestion();
+		}
+	};
+
+	// show previous question and options
+	const showPrevQuestion = () => {
+		let current_question = questions[question_index];
+		let options_div = '';
+		let options = current_question.options;
+		let id_number = 0;
+		let option_id = ['A', 'B', 'C', 'D'];
+
+		for (let key in options) {
+			let class_name = '';
+			if (key == current_question.answer) {
+				class_name = 'jsq-correct ';
+			}
+			if (current_question.user_selected == key) {
+				class_name = 'jsq-incorrect ';
+			}
+			options_div += '<div>' +
+				'<input type="radio" name="jsq_option" id="option_' + id_number + '" value="' + key + '" disabled>' +
+				'<label for="option_' + id_number + '" class="' + class_name + 'disabled"><span>' + option_id[id_number] + '</span><span>' + replaceHTMLtags(options[key]) + '</span></label>' +
+				'</div>';
+			id_number++;
+		}
+		document.getElementById("jsq_question").innerText = current_question.question;
+		document.getElementById("jsq_options").innerHTML = options_div;
+		document.getElementById("jsq_total").innerText = '' + (question_index + 1) + ' of  ' + questions.length + ' Questions';
+		showCodeBox(current_question);
+	};
+
+	// go previous question
+	const prevQuestion = () => {
+		if (question_index < 1) {
+			return;
+		}
+
+		question_index--;
+		current_question_completed = (questions[question_index].completed ? true : false);
+		if (question_index < 1) {
+			prev_button.style.visibility = 'hidden';
+		}
+		if (question_index >= 0 || questions[question_index].completed) {
+			next_button.style.visibility = 'visible';
+		}
+		stopTimer();
+		showPrevQuestion();
+	};
+
+	// start quiz
+	const startQuiz = () => {
+		document.querySelector(".jsq_header").removeAttribute("style");
+		document.querySelector(".jsq_main_content").removeAttribute("style");
+		document.querySelector(".jsq_footer").removeAttribute("style");
+		document.querySelector("#jsq_ifo_box").remove();
+		showQuestion();
+	};
+
+	next_button.addEventListener("click", nextQuestion);
+	prev_button.addEventListener("click", prevQuestion);
+	start_button.addEventListener("click", startQuiz);
+	// code generated by https://www.html-code-generator.com/javascript/quiz-generator
+
+})();
+
+// Assume `quizHtml` is the HTML content of quiz.html
+const parser = new DOMParser();
+const doc = parser.parseFromString(quizHtml, 'text/html');
+
+// Extract quiz questions
+const questions = [];
+
+doc.querySelectorAll('#jsq_options').forEach((questionNode, index) => {
+    const questionText = questionNode.querySelector('#jsq_question').textContent;
+    const options = {};
+
+    questionNode.querySelectorAll('input[type="radio"]').forEach((radioInput, optionIndex) => {
+        const optionId = radioInput.id;
+        const optionText = radioInput.nextElementSibling.querySelector('span:last-child').textContent;
+        options[optionId] = optionText;
+    });
+
+    const answer = questionNode.querySelector('input[type="radio"]:checked').id;
+    questions.push({ question: questionText, options, answer });
+});
+
+console.log(questions);
+
+
+    </script>
+</body>
+
+</html>
